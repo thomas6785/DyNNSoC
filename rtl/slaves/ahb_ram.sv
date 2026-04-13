@@ -3,16 +3,21 @@
 module ahb_ram (
 	input wire HCLK,				// bus clock
 	input wire HRESETn,			// bus reset, active low
-	input wire HSEL,				// selects this slave
-	input wire HREADY,			// indicates previous transaction completing
-	input wire [31:0] HADDR,	// address
-	input wire [1:0] HTRANS,	// transaction type (only bit 1 used)
-	input wire HWRITE,			// write transaction
-	input wire [2:0] HSIZE,		// transaction width (max 32-bit supported)
-	input wire [31:0] HWDATA,	// write data
-	output wire [31:0] HRDATA,	// read data from slave
-	output wire HREADYOUT		// ready output from slave
+	ahb_intf_s.slave AHB_IF
 );
+	wire HSEL 			= AHB_IF.HSEL;
+	wire HREADY 		= AHB_IF.HREADY;
+	wire [31:0] HADDR 	= AHB_IF.HADDR;
+	wire [1:0] HTRANS 	= AHB_IF.HTRANS;
+	wire HWRITE 		= AHB_IF.HWRITE;
+	wire [2:0] HSIZE 	= AHB_IF.HSIZE;
+	wire [31:0] HWDATA 	= AHB_IF.HWDATA;
+
+	wire [31:0] HRDATA;
+	assign AHB_IF.HRDATA = HRDATA;
+	wire HREADYOUT;
+	assign AHB_IF.HREADYOUT = HREADYOUT;
+	assign AHB_IF.HRESP = 1'b0; // always respond 'OKAY'
 
 	localparam ADDR_WIDTH	= 14;		// 16kByte = 4096 words of 32 bits
 

@@ -111,39 +111,21 @@ module dynnsoc (
     ahb_ram RAM (
         .HCLK,                                  // bus clock
         .HRESETn,                               // bus reset, active low
-        .HSEL        (ahb_ram_if.HSEL),         // selects this slave
-        .HREADY      (ahb_ram_if.HREADY),       // indicates previous transaction completing
-        .HADDR       (ahb_ram_if.HADDR),        // address
-        .HTRANS      (ahb_ram_if.HTRANS),       // transaction type (only bit 1 used)
-        .HSIZE       (ahb_ram_if.HSIZE),        // transaction width (max 32-bit supported)
-        .HWRITE      (ahb_ram_if.HWRITE),       // write transaction
-        .HWDATA      (ahb_ram_if.HWDATA),       // write data
-        .HRDATA      (ahb_ram_if.HRDATA),       // read data output
-        .HREADYOUT   (ahb_ram_if.HREADYOUT)     // ready output
-    ); // TODO modify module to take an interface input
-    assign ahb_ram_if.HRESP = OKAY;
+        .AHB_IF      (ahb_ram_if.slave)
+    );
 
     // ======================= GPIO block ======================================
     ahb_gpio GPIO (
         // Bus signals
         .HCLK,				                        // bus clock
         .HRESETn,			                        // bus reset, active low
-        .HSEL           (ahb_gpio_if.HSEL),	        // selects this slave
-        .HREADY         (ahb_gpio_if.HREADY),       // indicates previous transaction completing
-        .HADDR          (ahb_gpio_if.HADDR),        // address
-        .HTRANS         (ahb_gpio_if.HTRANS),       // transaction type (only bit 1 used)
-        .HSIZE          (ahb_gpio_if.HSIZE),        // transaction width (max 32-bit supported)
-        .HWRITE         (ahb_gpio_if.HWRITE),       // write transaction
-        .HWDATA         (ahb_gpio_if.HWDATA),       // write data
-        .HRDATA         (ahb_gpio_if.HRDATA),       // read data output
-        .HREADYOUT      (ahb_gpio_if.HREADYOUT),    // ready output
+        .AHB_IF         (ahb_gpio_if.slave),         // AHB slave interface
         // GPIO signals
         .gpio_out0      (led_gpio),                 // read-write address 0
         .gpio_out1      (),                         // read-write address 4
         .gpio_in0       (sw),                       // read only address 8
         .gpio_in1       ({11'b0, buttons})          // read only address C
     );
-    assign ahb_gpio_if.HRESP = OKAY;
 
     // ======================= UART block ======================================
     ahb_uart UART (

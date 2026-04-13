@@ -15,8 +15,8 @@ $SOCROOT/rtl/ahb_infra/ahb_mux.v
 $SOCROOT/rtl/ahb_infra/ahb_dummy.v
 
 # Small simple slaves
-$SOCROOT/rtl/slaves/ahb_gpio.v
-$SOCROOT/rtl/slaves/ahb_ram.v
+$SOCROOT/rtl/slaves/ahb_gpio.sv
+$SOCROOT/rtl/slaves/ahb_ram.sv
 $SOCROOT/rtl/slaves/imem.sv
 
 # UART

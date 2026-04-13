@@ -21,22 +21,14 @@ module ahb_gpio(
 			// Bus signals
 			input wire HCLK,				// bus clock
 			input wire HRESETn,			// bus reset, active low
-			input wire HSEL,				// selects this slave
-			input wire HREADY,			// indicates previous transaction completing
-			input wire [31:0] HADDR,	// address
-			input wire [1:0] HTRANS,	// transaction type (only bit 1 used)
-			input wire HWRITE,			// write transaction
-			input wire [2:0] HSIZE,		// transaction width (max 32-bit supported)
-			input wire [31:0] HWDATA,	// write data
-			output wire [31:0] HRDATA,	// read data from slave
-			output wire HREADYOUT,		// ready output from slave
+			ahb_intf_s.slave AHB_IF,		// AHB slave interface
+
 			// GPIO signals
 			output [15:0] gpio_out0,	// read-write address 0
 			output [15:0] gpio_out1,	// read-write address 4
 			input [15:0] gpio_in0,		// read only address 8
 			input [15:0] gpio_in1		// read only address C
-    );
-
+);
 	// Registers to hold signals from address phase
 	reg [3:0] rHADDR;			// only need 4 bits of address
 	reg [1:0] rHSIZE;			// only need 2 bits of size
@@ -51,7 +43,7 @@ module ahb_gpio(
 
 	// Internal control signals
 	reg [1:0] byteWrite;	// individual byte write enable signals
-	wire  nextWrite = HSEL & HWRITE & HTRANS[1];	// slave selected for write transfer
+	wire  nextWrite = AHB_IF.HSEL & AHB_IF.HWRITE & AHB_IF.HTRANS[1]; // slave selected for write transfer
 	reg [15:0]	readData;		// 16-bit data from read multiplexer
 
  	// Capture bus and internal signals in address phase
@@ -62,10 +54,10 @@ module ahb_gpio(
 				rHSIZE <= 2'b0;
 				rWrite <= 1'b0;
 			end
-		else if(HREADY)       // only update if HREADY is 1 - previous transaction completing
+		else if(AHB_IF.HREADY)       // only update if HREADY is 1 - previous transaction completing
              begin
-                rHADDR <= HADDR[3:0];         // capture signals from address phase
-                rHSIZE <= HSIZE[1:0];         // for use in data phase
+                rHADDR <= AHB_IF.HADDR[3:0];         // capture signals from address phase
+                rHSIZE <= AHB_IF.HSIZE[1:0];         // for use in data phase
                 rWrite <= nextWrite;
              end
 
@@ -92,10 +84,10 @@ module ahb_gpio(
 			end
 		else
 		 begin
-				if (byteWrite[0] && (rHADDR[3:2] == 2'h0)) out0L <= HWDATA[7:0];
-				if (byteWrite[1] && (rHADDR[3:2] == 2'h0)) out0H <= HWDATA[15:8];
-				if (byteWrite[0] && (rHADDR[3:2] == 2'h1)) out1L <= HWDATA[7:0];
-				if (byteWrite[1] && (rHADDR[3:2] == 2'h1)) out1H <= HWDATA[15:8];
+				if (byteWrite[0] && (rHADDR[3:2] == 2'h0)) out0L <= AHB_IF.HWDATA[7:0];
+				if (byteWrite[1] && (rHADDR[3:2] == 2'h0)) out0H <= AHB_IF.HWDATA[15:8];
+				if (byteWrite[0] && (rHADDR[3:2] == 2'h1)) out1L <= AHB_IF.HWDATA[7:0];
+				if (byteWrite[1] && (rHADDR[3:2] == 2'h1)) out1H <= AHB_IF.HWDATA[15:8];
 		 end
 
 	//	Input port registers
@@ -124,7 +116,8 @@ module ahb_gpio(
 			2'h3:		readData = in1B;			// address ends in 0xC
 		endcase
 
-	assign HRDATA = {16'b0, readData};	// extend with 0 bits for bus read
-	assign HREADYOUT = 1'b1;	// always ready - transaction never delayed
+	assign AHB_IF.HRDATA = {16'b0, readData};	// extend with 0 bits for bus read
+	assign AHB_IF.HREADYOUT = 1'b1;	// always ready - transaction never delayed
+	assign AHB_IF.HRESP = 1'b0; // always respond 'OKAY'
 
 endmodule
