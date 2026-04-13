@@ -18,8 +18,9 @@ module dynnsoc (
 
     localparam  OKAY = 1'b0, ERROR = 1'b1;  // values for the HRESP signal
 
-    // ========================= Bus Signals =====================================
-    wire        HRESETn;    // active low reset
+    // ========================================
+    // Interfaces for connecting components
+    // ========================================
     ahb_intf_m ahb_cpu_if();
     ahb_intf_s ahb_imem_if();
     ahb_intf_s ahb_ram_if();
@@ -27,15 +28,24 @@ module dynnsoc (
     ahb_intf_s ahb_uart_if();
     instruction_fetch_if instr_if(); // connect CPU directly to imem, bypassing the AHB bus
 
-    // ======================== Other Interconnecting Signals =======================
-    wire        resetHW;        // reset signal for hardware, active high
-    wire        CPUreset, CPUsleep;       // status signals
-    wire        ROMload;        // rom loader is active
-    wire [4:0]  buttons = {btnU, btnD, btnL, btnC, btnR};   // concatenate 5 pushbuttons
-
+    // ========================================
+    // Declare interrupt request lines
+    // ========================================
     wire        IRQ_uart;
-    wire        NMI;        // non-maskable interrupt (not used here)
-    wire [14:0] IRQ;        // interrupt signals from up to 16 devices - active high
+
+    wire [14:0] IRQ; // interrupt request vector to the core. Should remain high until addressed
+    assign IRQ = {
+        13'b0, IRQ_uart, 1'b0
+    };
+
+    // ========================================
+    // Declare some other connecting signals
+    // ========================================
+    wire        HRESETn;            // active low bus reset
+    wire        resetHW;            // reset signal for hardware, active high
+    wire        CPUsleep; // CPU status signals
+    wire        ROMload;            // rom loader is active
+    wire [4:0]  buttons = {btnU, btnD, btnL, btnC, btnR};   // concatenate 5 pushbuttons
 
     // Wires and multiplexer to drive LEDs from two different sources - needed for ROM loader
     wire [11:0] led_rom;        // status output from ROM loader
@@ -45,48 +55,42 @@ module dynnsoc (
     // ======================== Signals for display on oscilloscope ===================
     assign JA = {HCLK, ahb_cpu_if.HTRANS[1], ahb_cpu_if.HREADY, ahb_cpu_if.HRESP, '0};
 
-    // ======================== Reset Generator ======================================
+    // ========================================
+    // Reset generator
+    // ========================================
     // Asserts hardware reset until the clock module is locked, also if reset button pressed.
     // Asserts CPU and bus reset to meet Cortex-M0 requirements, also if ROM loader is active.
-    reset_gen resetGen (        // Instantiate reset generator module
+    reset_gen resetGen (                // Instantiate reset generator module
         .clk            (HCLK),         // works on system bus clock
         .resetPBn       (btnCpuResetn), // signal from CPU reset pushbutton
         .pll_lock       (1'b1),         // from clock management PLL
         .loader_active  (ROMload),      // from ROM loader hardware
-        .cpu_request    (1'b0),  // from CPU, requesting reset
+        .cpu_request    (1'b0),         // from CPU, requesting reset
         .resetHW        (resetHW),      // hardware reset output, active high
         .resetCPUn      (HRESETn),      // CPU and bus reset, active low
-        .resetLED       (CPUreset)      // status signal for indicator LED
     );
 
-    // ======================== Status Indicator ======================================
+    // ========================================
+    // Status indicator
+    // ========================================
     // Drives multi-colour LEDs to indicate status of processor and ROM loader.
     status_ind statusInd (      // Instantiate status indicator module
         .clk            (HCLK),       // works on system bus clock
         .reset          (resetHW),    // hardware reset signal
-        .statusIn       ({CPUreset, 1'b0, CPUsleep, ROMload}),  // status inputs
+        .statusIn       ({~HRESETn, 1'b0, CPUsleep, ROMload}),  // status inputs
         .rgbLED         (rgbLED)      // output signals for colour LEDs
     );
 
-    // ======================== Processor ========================================
-    // Set processor inputs to safe values
-    assign RXEV = 1'b0;     // no event
-    assign NMI = 1'b0;      // non-maskable interrupt is not active
-
-    // Connect the interrupt signal from the slave to the appropriate bit of IRQ
-    // Leave any unused interrupt inputs wired to 0 (inactive)
-    assign IRQ = {
-        13'b0, IRQ_uart, 1'b0
-    };
-
-    // Instantiate Ibex core
+    // ========================================
+    // CPU Core
+    // ========================================
     ibex_wrapper cpu (
         .HCLK,
         .HRESETn,
         .AHB_IF     (ahb_cpu_if.master),
 
         // Other signals
-        .NMI         (NMI),         // non-maskable interrupt
+        .NMI         (1'b0),        // non-maskable interrupt
         .EXT_IRQ     (1'b0),        // external interrupt
         .IRQ         (IRQ),         // interrupt lines from peripherals
         .SYSTICKCLKDIV(24'd1024),   // a "systick" interrupt will be generated every 1024 clock cycles. Firmware may ignore this
@@ -96,7 +100,9 @@ module dynnsoc (
         .instr_if(instr_if.core)
     );
 
-    // ======================== AHB interconnect ======================================
+    // ========================================
+    // AHB interconnect
+    // ========================================
     ahb_interconn interconn (
         .HCLK,
         .HRESETn,
@@ -107,14 +113,18 @@ module dynnsoc (
         .slave_if_s3 (ahb_uart_if.interconn)
     );
 
-    // ======================== Data memory - block RAM ====================================
+    // ========================================
+    // General-purpose read-write RAM
+    // ========================================
     ahb_ram RAM (
         .HCLK,                                  // bus clock
         .HRESETn,                               // bus reset, active low
         .AHB_IF      (ahb_ram_if.slave)
     );
 
-    // ======================= GPIO block ======================================
+    // ========================================
+    // GPIO slave
+    // ========================================
     ahb_gpio GPIO (
         // Bus signals
         .HCLK,				                        // bus clock
@@ -127,7 +137,9 @@ module dynnsoc (
         .gpio_in1       ({11'b0, buttons})          // read only address C
     );
 
-    // ======================= UART block ======================================
+    // ========================================
+    // UART slave
+    // ========================================
     ahb_uart UART (
         // Bus signals
         .HCLK,                                      // bus clock
@@ -147,21 +159,18 @@ module dynnsoc (
         .uart_IRQ(IRQ_uart)                         // interrupt request
     );
 
-    // ======================= ROM ======================================
+    // ========================================
+    // ROM
+    // ========================================
     // Read-only memory which is accessible by three means:
     // - AHB bus has read access
     // - Simple memory interface (for instruction fetches) (read-only)
     // - Loader interface (write-only)
-
     imem imem (
-        // AHB bus
-        // TODO add a write port and detect illegal writes to generate an error response
         .HCLK,
         .HRESETn,
-        .AHB_IF         (ahb_imem_if.slave),
-
-        // Memory interface for instruction fetches
-        .instr_if       (instr_if.rom),
+        .AHB_IF         (ahb_imem_if.slave), // AHB slave interface - read-only, gives error on writes
+        .instr_if       (instr_if.rom),      // Read-only memory interface for instruction fetches
 
         // Connections for ROM loader
         .resetHW        (resetHW),			// hardware reset
