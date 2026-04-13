@@ -35,5 +35,9 @@ report: sim-sv artefacts/log.log
 	cd artefacts													&&\
 	tail log.log
 
+gui: compile-sv elab-sv
+	cd artefacts &&\
+	xsim tb_sim -gui
+
 clean:
 	rm -r artefacts/*
