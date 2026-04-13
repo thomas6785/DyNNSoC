@@ -6,3 +6,8 @@
 **/xsim.dir/
 
 **/*.log
+
+
+
+# Anything beginning "gig_" is to be gitignored
+**/gig_*
