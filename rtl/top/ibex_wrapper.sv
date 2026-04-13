@@ -3,15 +3,7 @@ module ibex_wrapper (
   input  wire         HRESETn,						// System Reset, active low
 
   // AHB-LITE MASTER PORT for Instructions
-  output wire [31:0]  HADDR,				// AHB transaction address
-  output wire [ 2:0]  HSIZE,				// AHB size: byte, half-word or word
-  output wire [ 1:0]  HTRANS,				// AHB transfer: non-sequential only
-  output wire [31:0]  HWDATA,				// AHB write-data
-  output wire         HWRITE,				// AHB write control
-  output wire [3:0]   HPROT,        // AHB protection
-  input  wire [31:0]  HRDATA,				// AHB read-data
-  input  wire         HREADY,				// AHB stall signal
-  input  wire         HRESP,        // AHB error response
+  ahb_intf_m.master AHB_IF,
 
   // MISCELLANEOUS
   input  wire         NMI,				// Non-maskable interrupt input
@@ -31,24 +23,17 @@ module ibex_wrapper (
   reg [2:0] data_hsize;
   reg [1:0] data_addr_off;
 
-  wire [31:0] instr_wdata_o;
-  wire [31:0] instr_addr_o;
-  wire [31:0] instr_rdata_i;
   wire instr_rvalid_i;
-  wire instr_req_o;
-  wire instr_gnt_i;
 
   wire [3:0] data_be_o;
-  wire [31:0] data_wdata_o;
   wire [31:0] data_addr_o;
-  wire [31:0] data_rdata_i;
   wire data_rvalid_i;
   wire data_req_o;
   wire data_gnt_i;
   wire data_we_o;
 
   /* AHB Prot */
-  assign HPROT = 4'b0011; // Non-cacheable, non-bufferable, privileged, data access
+  assign AHB_IF.HPROT = 4'b0011; // Non-cacheable, non-bufferable, privileged, data access
   // This is the recommended "default" for managers without a specific protection implementation
   // See AHB standard page 45
 
@@ -101,8 +86,8 @@ module ibex_wrapper (
     .data_we_o(data_we_o),
     .data_be_o(data_be_o),
     .data_addr_o(data_addr_o),
-    .data_wdata_o(data_wdata_o),
-    .data_rdata_i(data_rdata_i),
+    .data_wdata_o(AHB_IF.WDATA),
+    .data_rdata_i(AHB_IF.HRDATA),
     .data_err_i(1'b0),
 
     // Interrupt inputs
@@ -127,20 +112,14 @@ module ibex_wrapper (
   // For this reason these signals are tied off
   // The synthesis tool should strip away the unused logic
   // but at some point it would be best to clean up this FSM (it wasn't well-designed to begin with anyway)
-  // TODO
-  assign instr_req_o = '0; // Previously this indicated an instruction request by the core, but now that instructions are handled by a separate ROM bus, this is always 0
-  assign instr_addr_o = '0;
-  // instr_gnt_i is not connected anywhere
-  // instr_rvalid_i is not connected anywhere
-  // instr_rdata_i is not connected anywhere
-
+  // TODO instr_rvalid_i should be removed and the state machine removed
 
   reg [4:0] state, nstate;
   localparam [4:0] S0 = 1;
   localparam [4:0] S1 = 2;
   localparam [4:0] S2 = 4;
   localparam [4:0] S3 = 8;
-  localparam [4:0] S4 = 16;
+  localparam [4:0] S4 = 16; // dev, why did you bother enumerating the states if you weren't going to name them!!!
 
   always @(posedge HCLK or negedge HRESETn)
     if(!HRESETn) state <= S0;
@@ -149,7 +128,7 @@ module ibex_wrapper (
   always @* begin
     nstate = S0;
     case (state)
-      S0  : if(data_req_o) nstate = S3; else if(instr_req_o) nstate = S1; else nstate = S0;
+      S0  : if(data_req_o) nstate = S3; else if(1'b0) nstate = S1; else nstate = S0;
       S1  : nstate = S2;
       S2  : if(instr_rvalid_i) nstate = S0; else nstate = S2;
       S3  : nstate = S4;
@@ -157,32 +136,23 @@ module ibex_wrapper (
     endcase
   end
 
-  assign instr_gnt_i = (state == S1);
-  assign instr_rvalid_i = (state == S2) ? HREADY : 0;
+  assign instr_rvalid_i = (state == S2) ? AHB_IF.HREADY : 0;
 
   assign data_gnt_i = (state == S3);
-  assign data_rvalid_i = (state == S4) ? HREADY : 0;
+  assign data_rvalid_i = (state == S4) ? AHB_IF.HREADY : 0;
 
-
-  assign HADDR =  (state == S1) ? instr_addr_o  :
+  assign AHB_IF.HADDR =  (state == S1) ? 31'b0  :
                   (state == S3) ? {data_addr_o | data_addr_off}  :   32'b0;
 
-  assign HTRANS = (state == S1) ? 2'b10 :
+  assign AHB_IF.HTRANS = (state == S1) ? 2'b10 :
                   (state == S3) ? 2'b10 : 2'b00;
 
-  assign HSIZE =  (state == S1) ? 3'b010 :
+  assign AHB_IF.HSIZE =  (state == S1) ? 3'b010 :
                   (state == S3) ? data_hsize : 3'b0;
 
-  assign HWRITE = (state == S3) ? data_we_o : 0 ;
+  assign AHB_IF.HWRITE = (state == S3) ? data_we_o : 0 ;
 
-  assign HWDATA = data_wdata_o;
-
-
-  assign instr_rdata_i = HRDATA;
-  assign data_rdata_i = HRDATA;
-
-
-  always @* begin
+  always_comb begin
     data_hsize = 3'b0;
     case(data_be_o)
       4'b0001 : data_hsize = 3'b000;
@@ -192,10 +162,11 @@ module ibex_wrapper (
       4'b0011 : data_hsize = 3'b001;
       4'b1100 : data_hsize = 3'b001;
       4'b1111 : data_hsize = 3'b010;
+      default : data_hsize = 3'b000; // should never happen
     endcase
   end
 
-  always @* begin
+  always_comb begin
     data_addr_off = 2'b0;
     case(data_be_o)
       4'b0001 : data_addr_off = 2'b00;
@@ -205,6 +176,7 @@ module ibex_wrapper (
       4'b0011 : data_addr_off = 2'b00;
       4'b1100 : data_addr_off = 2'b10;
       4'b1111 : data_addr_off = 2'b00;
+      default : data_addr_off = 2'b00; // should never happen
     endcase
   end
 
