@@ -1,0 +1,2 @@
+-f $SOCROOT/rtl/filelist
+$SOCROOT/verif/irq_test/TB_toplevel.sv
