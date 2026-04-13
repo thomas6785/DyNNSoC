@@ -3,7 +3,7 @@ CC      = $(PREFIX)gcc
 OBJCOPY = $(PREFIX)objcopy
 OBJDUMP = $(PREFIX)objdump
 
-CFLAGS  = -Wall -Os -march=rv32i_zicsr -mabi=ilp32 \
+CFLAGS  = -Wall -O0 -march=rv32i_zicsr -mabi=ilp32 \
            -mstrict-align -falign-functions=4 -ffreestanding -nostartfiles
 LDFLAGS = -T link.ld -nostartfiles -lgcc
 
