@@ -5,7 +5,7 @@
     assign slave.HSIZE    = master.HSIZE; \
     assign slave.HPROT    = master.HPROT; \
     assign slave.HTRANS   = master.HTRANS; \
-    assign slave.HADDR    = master.HADDR
+    assign slave.HADDR    = master.HADDR;
 
 module ahb_interconn (
     input logic HCLK,
@@ -20,11 +20,15 @@ module ahb_interconn (
     ahb_intf_s.interconn slave_if_s2,
     ahb_intf_s.interconn slave_if_s3
 );
+    ahb_intf_s dummy_if();
+    // A dummy for when no slave it selected
+
     // A lot of the signals from the master are shared to every slave
     `CONNECT_SLAVE_TO_MASTER(slave_if_s0, master_if);
     `CONNECT_SLAVE_TO_MASTER(slave_if_s1, master_if);
     `CONNECT_SLAVE_TO_MASTER(slave_if_s2, master_if);
     `CONNECT_SLAVE_TO_MASTER(slave_if_s3, master_if);
+    `CONNECT_SLAVE_TO_MASTER(dummy_if,    master_if);
     // I hate using macros but I really can't think of a cleaner way of doing this
     // Doing this for every single slave is very annoying... Would be nice if we could come up with a clean way of sharing this interface, but that starts to get messy when you have multiple masters (consider the fact that a master shouldn't need to be aware of which number master it is)
 
@@ -101,7 +105,6 @@ module ahb_interconn (
     // Dummy slave only needs the type of transaction to decide how to respond - other signals are ignored
     // The response is OKAY for IDLE and BUSY transactions, otherwise ERROR.
 
-    ahb_intf_s dummy_if();
     ahb_dummy DUMMY(
         .HCLK        (HCLK),            // bus clock
         .HRESETn     (HRESETn),         // bus reset, active low
