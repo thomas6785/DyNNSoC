@@ -129,7 +129,7 @@ module dynnsoc (
     // ======================== Address Decoder ======================================
     // Implements address map, generates slave select signals and controls mux
     // ## As you add more slaves, you need to use more of the slave select signals
-    AHBDCD decode (
+    ahb_decoder decode (
         .HADDR      (HADDR),         // address in
         .HSEL_S0    (HSEL_imem),
         .HSEL_S1    (HSEL_ram),
@@ -148,7 +148,7 @@ module dynnsoc (
 
     // ======================== Multiplexer ======================================
     // Selects appropriate slave output signals to pass to master
-    AHBMUX mux (
+    ahb_mux mux (
         .HCLK           (HCLK),             // bus clock and reset
         .HRESETn        (HRESETn),
         .MUX_SEL        (muxSel[3:0]),     // control from address decoder
@@ -233,7 +233,7 @@ module dynnsoc (
     );
 
     // ======================= UART block ======================================
-    AHBuart UART(
+    ahb_uart UART(
         // Bus signals
         .HCLK   (HCLK),				// bus clock
         .HRESETn (HRESETn),            // bus reset, active low
@@ -255,7 +255,7 @@ module dynnsoc (
     // Dummy slave only needs the type of transaction to decide how to respond.
     // The response is OKAY for IDLE and BUSY transactions, otherwise ERROR.
 
-    AHBdummy DUMMY(
+    ahb_dummy DUMMY(
         .HCLK        (HCLK),            // bus clock
         .HRESETn     (HRESETn),         // bus reset, active low
         .HSEL        (HSEL_dummy),      // selects this slave

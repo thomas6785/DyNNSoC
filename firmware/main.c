@@ -1,29 +1,40 @@
 #include "dynnsoc.h"
 
-/* Override the weak default handler for fast IRQ 1 (cause 17) */
-void irq_handler_01(void) __attribute__((interrupt("machine")));
-void irq_handler_01(void) {
-    /* Echo received character back and light LEDs */
-    char c = uart_getc();
-    uart_putc(c);
-    gpio_write(0xAAAA);
-}
+/* Create handlers for each interrupts that will simply write that interrupts ID to GPIO. Useful for testing the interrupts all work correctly */
+#define IRQ_HANDLER(name, id) \
+    void name(void) __attribute__((interrupt("machine"))); \
+    void name(void) { gpio_write(id); }
+
+IRQ_HANDLER(irq_handler_sw,      32)
+IRQ_HANDLER(irq_handler_systick, 64)
+IRQ_HANDLER(irq_handler_ext,     11)
+IRQ_HANDLER(irq_handler_00,       0)
+IRQ_HANDLER(irq_handler_01,       1)
+IRQ_HANDLER(irq_handler_02,       2)
+IRQ_HANDLER(irq_handler_03,       3)
+IRQ_HANDLER(irq_handler_04,       4)
+IRQ_HANDLER(irq_handler_05,       5)
+IRQ_HANDLER(irq_handler_06,       6)
+IRQ_HANDLER(irq_handler_07,       7)
+IRQ_HANDLER(irq_handler_08,       8)
+IRQ_HANDLER(irq_handler_09,       9)
+IRQ_HANDLER(irq_handler_10,      10)
+IRQ_HANDLER(irq_handler_11,      11)
+IRQ_HANDLER(irq_handler_12,      12)
+IRQ_HANDLER(irq_handler_13,      13)
+IRQ_HANDLER(irq_handler_14,      14)
+IRQ_HANDLER(irq_handler_nmi,    128)
 
 int main(void) {
-    /* Write to LEDs */
-    gpio_write(0x0001);
+    /* Write to GPIO initially */
+    gpio_write(0xFFFF);
 
-    /* Enable UART RX interrupt */
-    UART_CONTROL = UART_RX_NE_IE;
-    irq_enable(MIE_UART);
-    irq_global_enable();
+    irq_enable(0xFFFFFFFF); // enable all interrupts
+    irq_global_enable(); // enable global interrupt enable
 
     /* Send a greeting */
     uart_puts("DyNNSoC ready\r\n");
 
-    /* Read switches and display on LEDs */
-    while (1) {
-        uint16_t sw = gpio_read_switches();
-        gpio_write(sw);
-    }
+    // Do nothing (to test interrupts)
+    while (1);
 }

@@ -1,5 +1,5 @@
 # Utilities for the SoC top
-$SOCROOT/rtl/interfaces.sv
+$SOCROOT/rtl/utils/interfaces.sv
 $SOCROOT/rtl/utils/reset_gen.v
 $SOCROOT/rtl/utils/status_ind.v
 $SOCROOT/rtl/utils/ram_loader.v
@@ -14,21 +14,20 @@ $SOCROOT/rtl/ahb_infra/ahb_mux.v
 $SOCROOT/rtl/ahb_infra/ahb_dummy.v
 
 # Small simple slaves
-#$SOCROOT/rtl/small_slaves/AHBdisp.v
-$SOCROOT/rtl/small_slaves/AHBgpio.v
-$SOCROOT/rtl/small_slaves/AHBram.v
+$SOCROOT/rtl/slaves/ahb_gpio.v
+$SOCROOT/rtl/slaves/ahb_ram.v
+$SOCROOT/rtl/slaves/imem.sv
 
 # UART
-$SOCROOT/rtl/uart/uart.v
-$SOCROOT/rtl/uart/uart_RXonly.v
-$SOCROOT/rtl/uart/AHBuart.v
+$SOCROOT/rtl/slaves/uart/uart.v
+$SOCROOT/rtl/slaves/uart/uart_RXonly.v
+$SOCROOT/rtl/slaves/uart/ahb_uart.v
 
 # Cortex core files (flattened)
 # $SOCROOT/rtl/cortex_m0/CORTEXM0DS.v
 # $SOCROOT/rtl/cortex_m0/cortexm0ds_logic.v
 
 # Ibex files
-$SOCROOT/rtl/imem.sv
 -f $SOCROOT/rtl/ibex/filelist
 $SOCROOT/rtl/ibex_wrapper.sv
 

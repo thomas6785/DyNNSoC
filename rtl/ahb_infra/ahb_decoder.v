@@ -37,7 +37,7 @@
 
 
 module ahb_decoder (
-    input [31:0] HADDR,       // AHB bus address  
+    input [31:0] HADDR,       // AHB bus address
     output reg HSEL_S0,       // slave select line 0
     output reg HSEL_S1,
     output reg HSEL_S2,
@@ -53,7 +53,7 @@ module ahb_decoder (
     );  // end of port list
 
 
-// Address decoding logic to implement the address map: 
+// Address decoding logic to implement the address map:
 // decide which slave is active by checking the 8 MSBs of the address.
 always @ (HADDR)
     begin
@@ -68,7 +68,7 @@ always @ (HADDR)
         HSEL_S8 = 1'b0;
         HSEL_S9 = 1'b0;
         HSEL_NOMAP = 1'b0;
-        
+
 // Logic to select one slave, and also output the slave number to the multiplexers
 // ## As you add more slaves, you need to extend this logic to select them
         case(HADDR[31:24])      // Use the top 8 bits of the address to select
@@ -77,13 +77,11 @@ always @ (HADDR)
                     HSEL_S0 = 1'b1;     // activate slave select 0 output
                     MUX_SEL = 4'd0;     // send slave number 0 to multiplexers
                 end
-                
             8'h20: 				// Address range 0x2000_0000 to 0x20FF_FFFF  16MB
                 begin
                     HSEL_S1 = 1'b1;     // activate slave select 1 output
                     MUX_SEL = 4'd1;     // send slave number 1 to multiplexers
                 end
-
             8'h50:
                 begin
                     HSEL_S2 = 1'b1;
@@ -94,14 +92,14 @@ always @ (HADDR)
                     HSEL_S3 = 1'b1;
                     MUX_SEL = 4'd3;
                 end
-             
-         
+
+
             default: 			// Address not mapped to any slave
                 begin
                     HSEL_NOMAP = 1'b1;   // activate the NOMAP output
-                    MUX_SEL = 4'd15;     // send dummy slave number 15 to multiplexers 
+                    MUX_SEL = 4'd15;     // send dummy slave number 15 to multiplexers
                 end
         endcase
     end  // end of always block
-    
+
 endmodule

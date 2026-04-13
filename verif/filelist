@@ -1,2 +1,0 @@
--f $SOCROOT/rtl/filelist
-$SOCROOT/verif/TB_toplevel.sv

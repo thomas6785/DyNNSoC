@@ -92,5 +92,4 @@ module imem (
         .p2_dout  ( HRDATA                  ),
         .p2_we    ( 1'b0                    ) // disable writes on this port
     );
-    initial $readmemh("/home/tudentstudent/DyNNSoC/firmware/dynnsoc/main.hex", bram.mem);  // preload ROM with some data for testing
 endmodule

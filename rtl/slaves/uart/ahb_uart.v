@@ -2,10 +2,10 @@
 //////////////////////////////////////////////////////////////////////////////////
 // Company: UCD School of Electrical and Electronic Engineering
 // Engineer: Brian Mulkeen, with fifo blocks from ARM
-// 
-// Create Date:   20 October 2014 
+//
+// Create Date:   20 October 2014
 // Design Name: 	Cortex-M0 DesignStart system
-// Module Name:   AHBuart 
+// Module Name:   AHBuart
 // Description: 	Provides asynchronous serial transmitter and receiver on AHB.
 //					Transmit and receive paths have 16-byte FIFO buffers.
 //		Address 0 - receive data, 8 bits, from FIFO, read only
@@ -19,13 +19,13 @@
 //		This version provides simple level-based interrupt signal from the status bits.
 //		The only way to clear an interrupt request is to remove the problem or clear the enable bit.
 //		All transfers 32 bits, with data bits right-justified, filled with 0 on left on read.
-// Revision: 
+// Revision:
 // Revision 0.01 - File Created
 // Revision 1 - modified for synchronous reset, October 2015
 // Revision 2 - added HRESP output, March 2024
 //
 //////////////////////////////////////////////////////////////////////////////////
-module AHBuart(
+module ahb_uart(
 			// Bus signals
 			input  HCLK,			// bus clock
 			input  HRESETn,			// bus reset, active low
@@ -44,7 +44,7 @@ module AHBuart(
 			output serialTx,		// serial transmit, idles at 1
 			output uart_IRQ			// interrupt request
     );
-	
+
 	// Registers to hold signals from address phase
 	reg [1:0] rHADDR;			// only need two bits of address
 	reg rWrite, rRead;	// write enable signals
@@ -70,8 +70,8 @@ module AHBuart(
 		else if(HREADY)
 		 begin
 			rHADDR <= HADDR[3:2];         // capture address bits for for use in data phase
-			rWrite <= HSEL & HWRITE & HTRANS[1];	// slave selected for write transfer       
-			rRead <= HSEL & ~HWRITE & HTRANS[1];	// slave selected for read transfer 
+			rWrite <= HSEL & HWRITE & HTRANS[1];	// slave selected for write transfer
+			rRead <= HSEL & ~HWRITE & HTRANS[1];	// slave selected for read transfer
 		 end
 
 	// Control register
@@ -79,22 +79,22 @@ module AHBuart(
 	always @(posedge HCLK)
 		if (!HRESETn) control <= 4'b0;
 		else if (rWrite && (rHADDR == 2'h3)) control <= HWDATA[3:0];
-		
+
 	// Status bits - can read in status register, can cause interrupts if enabled
 	wire [3:0] status = {~rx_fifo_empty, rx_fifo_full, tx_fifo_empty, tx_fifo_full};
-	
+
 	// Interrupt signal - AND each status bit with enable bit, then OR all the results
 	assign uart_IRQ = |(status & control);
-		
+
 	// Bus output signals
 	always @(rx_fifo_out, tx_fifo_out, status, control, rHADDR)
 		case (rHADDR)		// select on word address (stored from address phase)
 			2'h0:		readData = rx_fifo_out;	// read from rx fifo - oldest received byte
 			2'h1:		readData = tx_fifo_out;	// read of tx register gives oldest byte in queue
-			2'h2:		readData = {4'b0, status};	// status register	    
+			2'h2:		readData = {4'b0, status};	// status register
 			2'h3:		readData = {4'b0, control};	// read back of control register
 		endcase
-		
+
 	assign HRDATA = {24'b0, readData};	// extend with 0 bits for bus read
 
 	/* The UART block does not need wait states, and does not report errors.
@@ -102,7 +102,7 @@ module AHBuart(
 	   or read received data, to be sure that this will succeed.  */
 	assign HREADYOUT = 1'b1;	// always ready
 	assign HRESP = 1'b0;		// always OKAY
-	
+
 // ========================= FIFOs ===================================================
 	  //Transmitter FIFO
 	  FIFO  #(.DWIDTH(8), .AWIDTH(4))
@@ -116,7 +116,7 @@ module AHBuart(
 	    .full(tx_fifo_full),
 	    .r_data(tx_fifo_out)
 	  );
-	  
+
 	  //Receiver FIFO
 	  FIFO  #(.DWIDTH(8), .AWIDTH(4))
 		uFIFO_RX (
@@ -143,5 +143,5 @@ module AHBuart(
         .rxdout     (rx_fifo_in),        // 8-bit received data
         .rxnew      (rxnew)       // one-cycle strobe signal
 	   );
-   
+
 endmodule

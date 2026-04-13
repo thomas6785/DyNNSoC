@@ -57,6 +57,7 @@ module ibex_wrapper (
 	reg  [23:0]  clkdiv;
 	reg 		systickclk;
   assign div = (clkdiv == SYSTICKCLKDIV);
+  // TODO KNOWN ISSUE: the systick IRQ is only one cycle long, which Ibex will consistently 'miss'. Need a sticky flag, and a mechanism for clearing it. Ibex doesn't have a hardware mechanism for clearing it, so we would need to rely on the software to clear it. As it happens I have no use case for systick so I'm leaving this bug for now
 
   always @(posedge HCLK or negedge HRESETn)
     if(!HRESETn) clkdiv <= 24'd0;
