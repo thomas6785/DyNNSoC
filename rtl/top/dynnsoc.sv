@@ -25,7 +25,6 @@ module dynnsoc (
     ahb_intf_s ahb_ram_if();
     ahb_intf_s ahb_gpio_if();
     ahb_intf_s ahb_uart_if();
-    ahb_intf_s ahb_dummy_if();
     instruction_fetch_if instr_if(); // connect CPU directly to imem, bypassing the AHB bus
 
     // ======================== Other Interconnecting Signals =======================
@@ -91,16 +90,18 @@ module dynnsoc (
         .HTRANS      (ahb_cpu_if.HTRANS),
         .HPROT       (ahb_cpu_if.HPROT),
         .HSIZE       (ahb_cpu_if.HSIZE),
+
         // Inputs from the AHB-Lite bus
         .HRDATA      (ahb_cpu_if.HRDATA),
         .HREADY      (ahb_cpu_if.HREADY),
         .HRESP       (ahb_cpu_if.HRESP),
+
         // Other signals
-        .NMI         (NMI),
-        .EXT_IRQ     (1'b0),        // no external interrupts in this design
-        .IRQ         (IRQ),
-        .SYSTICKCLKDIV(24'd1024),  // an interrupt will be generated every 1024 clock cycles. Firmware may ignore this
-        .core_sleep_o(CPUsleep),     // CPU sleeping, waiting for interrupt
+        .NMI         (NMI),         // non-maskable interrupt
+        .EXT_IRQ     (1'b0),        // external interrupt
+        .IRQ         (IRQ),         // interrupt lines from peripherals
+        .SYSTICKCLKDIV(24'd1024),   // a "systick" interrupt will be generated every 1024 clock cycles. Firmware may ignore this
+        .core_sleep_o(CPUsleep),    // CPU sleeping, waiting for interrupt
 
         // Memory interface for instruction fetches
         .instr_if(instr_if.core)
@@ -131,6 +132,7 @@ module dynnsoc (
         .HRDATA      (ahb_ram_if.HRDATA),       // read data output
         .HREADYOUT   (ahb_ram_if.HREADYOUT)     // ready output
     ); // TODO modify module to take an interface input
+    assign ahb_ram_if.HRESP = OKAY;
 
     // ======================= GPIO block ======================================
     ahb_gpio GPIO (
@@ -152,6 +154,7 @@ module dynnsoc (
         .gpio_in0       (sw),                       // read only address 8
         .gpio_in1       ({11'b0, buttons})          // read only address C
     );
+    assign ahb_gpio_if.HRESP = OKAY;
 
     // ======================= UART block ======================================
     ahb_uart UART (
@@ -201,4 +204,5 @@ module dynnsoc (
         .rom_load_status(led_rom),          // 12-bit word count for display on LEDs
         .rom_load_active(ROMload)			// loader active
     );
+    assign ahb_imem_if.HRESP = OKAY;
 endmodule
