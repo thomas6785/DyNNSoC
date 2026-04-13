@@ -22,7 +22,7 @@ module TB_toplevel;
         .serialTx(serialTx)
     );
 
-    initial $readmemh("/home/tudentstudent/DyNNSoC/firmware/main.hex", dut.imem.bram.mem);  // load the program into ROM
+    initial $readmemh("/home/tudentstudent/DyNNSoC/verif/irq_test/main.hex", dut.imem.bram.mem);  // load the program into ROM
 
     initial begin
         clk50 = 1'b0;
