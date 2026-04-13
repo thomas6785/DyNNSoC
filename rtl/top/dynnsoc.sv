@@ -158,12 +158,7 @@ module dynnsoc (
         // TODO add a write port and detect illegal writes to generate an error response
         .HCLK,
         .HRESETn,
-        .HSEL           (ahb_imem_if.HSEL),
-        .HREADY         (ahb_imem_if.HREADY),
-        .HADDR          (ahb_imem_if.HADDR),
-        .HTRANS         (ahb_imem_if.HTRANS),
-        .HRDATA         (ahb_imem_if.HRDATA),
-        .HREADYOUT      (ahb_imem_if.HREADYOUT),
+        .AHB_IF         (ahb_imem_if.slave),
 
         // Memory interface for instruction fetches
         .instr_if       (instr_if.rom),
@@ -175,5 +170,4 @@ module dynnsoc (
         .rom_load_status(led_rom),          // 12-bit word count for display on LEDs
         .rom_load_active(ROMload)			// loader active
     );
-    assign ahb_imem_if.HRESP = OKAY;
 endmodule

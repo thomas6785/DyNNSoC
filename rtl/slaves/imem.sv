@@ -14,39 +14,38 @@ The ROM can be loaded via UART. While it is loading, port B is disabled for read
 */
 
 module imem (
-    input wire HCLK,				// bus clock
+    input wire HCLK,            // bus clock
+    input wire HRESETn,         // bus reset, active low
 
-    // AHB interface - read only
-    input wire HRESETn,			// bus reset, active low
-    input wire HSEL,			// selects this slave
-    input wire HREADY,			// indicates previous transaction completing
-    input wire [31:0] HADDR,	// address
-    input wire [1:0] HTRANS,	// transaction type (only bit 1 used)
-//	input wire HWRITE,			// write transaction (ignored)
-//	input wire [2:0] HSIZE,		// transaction width (ignored)
-//	input wire [31:0] HWDATA,	// write data (ignored)
-    output wire [31:0] HRDATA,	// read data from slave
-    output wire HREADYOUT,		// ready output from slave
+    // AHB slave interface - also read only
+    ahb_intf_s.slave AHB_IF,
 
     // Memory interface for core instruction fetches - read only
     instruction_fetch_if.rom instr_if,
 
     // UART loader connections
-    input wire resetHW,			// hardware reset
-    input wire loadButton,		// pushbutton to activate loader
-    input wire serialRx,	    // serial input
+    input wire resetHW, // hardware reset
+    input wire loadButton, // pushbutton to activate loader
+    input wire serialRx,     // serial input
     output [11:0] rom_load_status,        // 12-bit output to indicate progress
-    output rom_load_active			// loader active
+    output rom_load_active // loader active
 );
-    localparam ADDR_WIDTH	= 15;		// 32kByte = 8k words of 32 bits
+    localparam ADDR_WIDTH = 15; // 32kByte = 8k words of 32 bits
 
+    assign AHB_IF.HREADYOUT = 1'b1; // Always ready
+    // Make sure write transactions return an error
+    reg rWrite; // registered write flag from address phase
+    always @(posedge HCLK)
+        if (!HRESETn) rWrite <= 1'b0;
+        else if (AHB_IF.HREADY) rWrite <= AHB_IF.HSEL & AHB_IF.HTRANS[1] & AHB_IF.HWRITE;
+    assign AHB_IF.HRESP = rWrite; // error if write was attempted
+
+    // ROM loader signals
     wire [7:0] rxByte;
     wire newByte, wNow;
     wire [ADDR_WIDTH-3:0] wAddr;
     wire [31:0] wData;
-
-    assign HREADYOUT = 1'b1;	// always ready - transaction never delayed
-    assign status = wAddr;     // widths may not match - ok
+    assign rom_load_status = wAddr;     // widths may not match - this is fine
 
     // Instantiate UART receive block (includes bit-rate generator)
     uart_RXonly uart1 (
@@ -59,15 +58,15 @@ module imem (
 
     // Instantiate the loader hardware
     ram_loader # (.ADDR_WIDTH(ADDR_WIDTH)) loader (
-        .HCLK			(HCLK),				// bus clock
-        .resetHW		(resetHW),			// hardware reset
-        .loadButton	(loadButton),		// pushbutton to activate loader
-        .rxByte		(rxByte),	      // input byte from uart receiver
-        .newByte		(newByte),				// strobe to indicate new byte
-        .wAddr		(wAddr),        // write address
-        .wData		(wData),			// data to memory
-        .wNow			(wNow),					// write control signal
-        .ROMload		(ROMload)			// loader active
+        .HCLK (HCLK), // bus clock
+        .resetHW (resetHW), // hardware reset
+        .loadButton (loadButton), // pushbutton to activate loader
+        .rxByte (rxByte),       // input byte from uart receiver
+        .newByte (newByte), // strobe to indicate new byte
+        .wAddr (wAddr),        // write address
+        .wData (wData), // data to memory
+        .wNow (wNow), // write control signal
+        .ROMload (ROMload) // loader active
         );
 
     // Instantiate the block RAM
@@ -86,10 +85,10 @@ module imem (
         .p1_we    ( ROMload ? wNow : 1'b0 ), // enable writes when loading, disable otherwise
 
         // Port B - read for AHB interface
-        .p2_en    ( ~ROMload                ),
-        .p2_addr  ( HADDR[ADDR_WIDTH-1:2]   ),
-        .p2_din   ( '0                      ), // irrelevant - writes are disabled
-        .p2_dout  ( HRDATA                  ),
-        .p2_we    ( 1'b0                    ) // disable writes on this port
+        .p2_en    ( ~ROMload                       ),
+        .p2_addr  ( AHB_IF.HADDR[ADDR_WIDTH-1:2]   ),
+        .p2_din   ( '0                             ), // irrelevant - writes are disabled
+        .p2_dout  ( AHB_IF.HRDATA                  ),
+        .p2_we    ( 1'b0                           ) // disable writes on this port
     );
 endmodule
