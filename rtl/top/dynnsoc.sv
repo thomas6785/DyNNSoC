@@ -42,8 +42,8 @@ module dynnsoc (
     // Declare some other connecting signals
     // ========================================
     wire        HRESETn;            // active low bus reset
-    wire        resetHW;            // reset signal for hardware, active high
-    wire        CPUsleep; // CPU status signals
+    wire        resetHW;            // reset signal for hardware, active high TODO remove this an use a common reset for everything
+    wire        CPUsleep;           // CPU status signals
     wire        ROMload;            // rom loader is active
     wire [4:0]  buttons = {btnU, btnD, btnL, btnC, btnR};   // concatenate 5 pushbuttons
 
