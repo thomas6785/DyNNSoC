@@ -198,7 +198,7 @@ module dynnsoc (
 
 
     // ======================== Data memory - block RAM ====================================
-    AHBram RAM (
+    ahb_ram RAM (
         .HCLK        (HCLK),                // bus clock
         .HRESETn     (HRESETn),             // bus reset, active low
         .HSEL        (HSEL_ram),            // selects this slave
@@ -213,7 +213,7 @@ module dynnsoc (
     );
 
     // ======================= GPIO block ======================================
-    AHBgpio GPIO(
+    ahb_gpio GPIO(
         // Bus signals
         .HCLK,				  // bus clock
         .HRESETn,			  // bus reset, active low

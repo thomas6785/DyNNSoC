@@ -34,6 +34,3 @@ $SOCROOT/rtl/ibex_wrapper.sv
 # SoC top
 -sv
 $SOCROOT/rtl/dynnsoc.sv
-
-# TB
-$SOCROOT/verif/TB_toplevel.sv
