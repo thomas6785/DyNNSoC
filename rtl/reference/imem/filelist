@@ -1,0 +1,5 @@
+$SOCROOT/rtl/imem/ram_loader.v
+$SOCROOT/rtl/imem/uart_RXonly.v
+-sv
+$SOCROOT/rtl/imem/imem_ram.sv
+$SOCROOT/rtl/imem/imem.sv

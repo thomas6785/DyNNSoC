@@ -1,0 +1,8 @@
+0.7
+2020.2
+May 21 2025
+22:59:56
+/home/tudentstudent/DyNNSoC/rtl/imem/imem.sv,1775481661,systemVerilog,,,,imem,,,,,,,,
+/home/tudentstudent/DyNNSoC/rtl/imem/imem_ram.sv,1775481647,systemVerilog,,/home/tudentstudent/DyNNSoC/rtl/imem/imem.sv,,imem_ram,,,,,,,,
+/home/tudentstudent/DyNNSoC/rtl/imem/ram_loader.v,1775481173,systemVerilog,,/home/tudentstudent/DyNNSoC/rtl/imem/uart_RXonly.v,,ram_loader,,,,,,,,
+/home/tudentstudent/DyNNSoC/rtl/imem/uart_RXonly.v,1775481189,systemVerilog,,/home/tudentstudent/DyNNSoC/rtl/imem/imem_ram.sv,,uart_RXonly,,,,,,,,
