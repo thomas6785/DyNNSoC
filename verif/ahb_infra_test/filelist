@@ -1,2 +1,0 @@
--f $SOCROOT/rtl/filelist
-$SOCROOT/verif/ahb_infra_test/TB_toplevel.sv
