@@ -86,7 +86,7 @@ module ibex_wrapper (
     .data_we_o(data_we_o),
     .data_be_o(data_be_o),
     .data_addr_o(data_addr_o),
-    .data_wdata_o(AHB_IF.WDATA),
+    .data_wdata_o(AHB_IF.HWDATA),
     .data_rdata_i(AHB_IF.HRDATA),
     .data_err_i(1'b0),
 

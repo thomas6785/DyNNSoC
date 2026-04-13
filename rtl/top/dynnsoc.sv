@@ -83,18 +83,7 @@ module dynnsoc (
     ibex_wrapper cpu (
         .HCLK,
         .HRESETn,
-        // Outputs to the AHB-Lite bus
-        .HWDATA      (ahb_cpu_if.HWDATA),
-        .HADDR       (ahb_cpu_if.HADDR),
-        .HWRITE      (ahb_cpu_if.HWRITE),
-        .HTRANS      (ahb_cpu_if.HTRANS),
-        .HPROT       (ahb_cpu_if.HPROT),
-        .HSIZE       (ahb_cpu_if.HSIZE),
-
-        // Inputs from the AHB-Lite bus
-        .HRDATA      (ahb_cpu_if.HRDATA),
-        .HREADY      (ahb_cpu_if.HREADY),
-        .HRESP       (ahb_cpu_if.HRESP),
+        .AHB_IF     (ahb_cpu_if.master),
 
         // Other signals
         .NMI         (NMI),         // non-maskable interrupt
