@@ -1,7 +1,7 @@
+run: artefacts/main.hex compile-sv elab-sv sim-sv report
+
 FW_DIR  := $(SOCROOT)/firmware
 include $(FW_DIR)/firmware.mk
-
-run: artefacts/main.hex compile-sv elab-sv sim-sv report
 
 .SILENT: artefacts/log.log
 artefacts/log.log:
@@ -17,17 +17,17 @@ artefacts/log.log:
 # if you want a full clean run use "make run"
 
 compile-sv: artefacts/log.log
-	echo "\n\nCompiling test $$(pwd)"								&&\
+	echo "\nCompiling test $$(pwd)"								&&\
 	cd artefacts													&&\
 	xvlog -f ../filelist 						>> log.log
 
 elab-sv: artefacts/log.log
-	echo "\n\nElaborating test $$(pwd)"								&&\
+	echo "\nElaborating test $$(pwd)"								&&\
 	cd artefacts													&&\
 	xelab -debug typical TB_toplevel -s tb_sim	>> log.log
 
 sim-sv: artefacts/log.log
-	echo "\n\nSimulating test $$(pwd)"								&&\
+	echo "\nSimulating test $$(pwd)"								&&\
 	cd artefacts													&&\
 	xsim tb_sim -runall 						>> log.log
 
