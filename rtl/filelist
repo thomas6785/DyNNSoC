@@ -1,0 +1,40 @@
+# Utilities for the SoC top
+$SOCROOT/rtl/interfaces.sv
+$SOCROOT/rtl/utils/reset_gen.v
+$SOCROOT/rtl/utils/status_ind.v
+$SOCROOT/rtl/utils/ram_loader.v
+$SOCROOT/rtl/utils/fifo.v
+$SOCROOT/rtl/utils/ram_2port.sv
+$SOCROOT/rtl/utils/ram_2port_true.sv
+$SOCROOT/rtl/utils/ram_2port_hetero.sv
+
+# AHB utilities
+$SOCROOT/rtl/ahb_infra/ahb_decoder.v
+$SOCROOT/rtl/ahb_infra/ahb_mux.v
+$SOCROOT/rtl/ahb_infra/ahb_dummy.v
+
+# Small simple slaves
+#$SOCROOT/rtl/small_slaves/AHBdisp.v
+$SOCROOT/rtl/small_slaves/AHBgpio.v
+$SOCROOT/rtl/small_slaves/AHBram.v
+
+# UART
+$SOCROOT/rtl/uart/uart.v
+$SOCROOT/rtl/uart/uart_RXonly.v
+$SOCROOT/rtl/uart/AHBuart.v
+
+# Cortex core files (flattened)
+# $SOCROOT/rtl/cortex_m0/CORTEXM0DS.v
+# $SOCROOT/rtl/cortex_m0/cortexm0ds_logic.v
+
+# Ibex files
+$SOCROOT/rtl/imem.sv
+-f $SOCROOT/rtl/ibex/filelist
+$SOCROOT/rtl/ibex_wrapper.sv
+
+# SoC top
+-sv
+$SOCROOT/rtl/dynnsoc.sv
+
+# TB
+$SOCROOT/verif/TB_toplevel.sv
