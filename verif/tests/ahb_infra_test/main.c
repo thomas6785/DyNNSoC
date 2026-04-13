@@ -4,15 +4,7 @@ static const uint32_t expected[] = { 10, 20, 30, 40, 50 };
 static uint32_t init_var[] = {13, 17, 19, 23, 29};
 
 __attribute__((noinline)) int32_t multiply(int32_t a, int32_t b) {
-    uint32_t ua = (uint32_t)a;
-    uint32_t ub = (uint32_t)b;
-    uint32_t result = 0;
-    while (ub) {
-        if (ub & 1) result += ua;
-        ua <<= 1;
-        ub >>= 1;
-    }
-    return (int32_t)result;
+    return a * b;
 }
 
 int main(void) {
