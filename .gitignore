@@ -1,0 +1,8 @@
+# Simulation artefacts
+**/*.jou
+**/x*.pb
+**/*.wdb
+**/artefacts/
+**/xsim.dir/
+
+**/*.log
