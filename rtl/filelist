@@ -1,3 +1,4 @@
+-sv
 # Utilities for the SoC top
 $SOCROOT/rtl/utils/interfaces.sv
 $SOCROOT/rtl/utils/reset_gen.v
@@ -29,8 +30,9 @@ $SOCROOT/rtl/slaves/uart/ahb_uart.v
 
 # Ibex files
 -f $SOCROOT/rtl/ibex/filelist
-$SOCROOT/rtl/ibex_wrapper.sv
+$SOCROOT/rtl/top/ibex_wrapper.sv
 
 # SoC top
--sv
-$SOCROOT/rtl/dynnsoc.sv
+$SOCROOT/rtl/ahb_infra/ahb_intf.sv
+$SOCROOT/rtl/top/ahb_interconn.sv
+$SOCROOT/rtl/top/dynnsoc.sv
