@@ -67,7 +67,7 @@ module dynnsoc (
         .loader_active  (ROMload),      // from ROM loader hardware
         .cpu_request    (1'b0),         // from CPU, requesting reset
         .resetHW        (resetHW),      // hardware reset output, active high
-        .resetCPUn      (HRESETn),      // CPU and bus reset, active low
+        .resetCPUn      (HRESETn)       // CPU and bus reset, active low
     );
 
     // ========================================

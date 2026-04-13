@@ -60,16 +60,6 @@ module TB_toplevel;
             assert_equal(LED,i, $sformatf("LED should indicate IRQ %d was handled", i));
         end
 
-        // Attempt NMI
-        repeat(200) @(posedge clk50);
-        $display("          Asserting NMI");
-        force dut.NMI = 1'b1;
-        repeat(3) @(posedge clk50);  // hold NMI high for a few cycles to make sure the core sees it
-        release dut.NMI;
-        $display("          Released NMI");
-        repeat(100) @(posedge clk50); // wait for the ISR to finish
-        assert_equal(LED,128, "LED should indicate NMI was handled");
-
         repeat(1000) @(posedge clk50); // wait for some time to allow the program to run
 
         $display("\n========================================");

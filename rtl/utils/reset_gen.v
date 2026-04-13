@@ -24,7 +24,7 @@ module reset_gen(
     input loader_active,	// ROM loader hardware is active
     input cpu_request,		// CPU is requesting reset
     output resetHW,			// hardware reset, active high
-    output resetCPUn,		// CPU and bus reset, active low
+    output resetCPUn		// CPU and bus reset, active low
 );
 
 // Five flip-flops (four would be enough - just being safe!)
