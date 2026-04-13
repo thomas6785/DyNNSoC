@@ -4,13 +4,21 @@ static const uint32_t expected[] = { 10, 20, 30, 40, 50 };
 static uint32_t init_var[] = {13, 17, 19, 23, 29};
 
 __attribute__((noinline)) int32_t multiply(int32_t a, int32_t b) {
-    return a * b;
+    uint32_t ua = (uint32_t)a;
+    uint32_t ub = (uint32_t)b;
+    uint32_t result = 0;
+    while (ub) {
+        if (ub & 1) result += ua;
+        ua <<= 1;
+        ub >>= 1;
+    }
+    return (int32_t)result;
 }
 
 int main(void) {
     irq_global_disable();
     // Test the core is basically working and can use GPIO
-    volatile int i,j;
+    volatile uint32_t i,j;
     i = 0;
     for (j = 0; j < 200; j++) {
         i++;
@@ -31,7 +39,7 @@ int main(void) {
     gpio_write(init_var[1]-17);
     gpio_write(init_var[2]-19);
     gpio_write(init_var[3]-23);
-    gpio_write(init_var[4]-29); // TODO FIX
+    gpio_write(init_var[4]-29);
 
     // Test we can overwrite initialised variables with new values
     for (i = 0; i < 5; i++) {
@@ -41,7 +49,7 @@ int main(void) {
 
     // Test function calls (which also tests the stack is working)
     volatile int32_t a = 6, b = 7, c = - 3, d = 8; // need to declare these as volatile to prevent compiler from pre-computing
-    gpio_write(multiply(a,b) - 42); // TODO FIX
+    gpio_write(multiply(a,b) - 42);
     gpio_write(multiply(c,d) + 24);
 
     gpio_write(0xBEEF); // BEEF means the test is over

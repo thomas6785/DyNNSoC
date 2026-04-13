@@ -22,7 +22,7 @@ IRQ_HANDLER(irq_handler_10,      10)
 IRQ_HANDLER(irq_handler_11,      11)
 IRQ_HANDLER(irq_handler_12,      12)
 IRQ_HANDLER(irq_handler_13,      13)
-IRQ_HANDLER(irq_handler_14,      13)
+IRQ_HANDLER(irq_handler_14,      14)
 IRQ_HANDLER(irq_handler_nmi,    128)
 
 int main(void) {
