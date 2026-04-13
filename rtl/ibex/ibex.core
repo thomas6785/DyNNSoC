@@ -1,0 +1,53 @@
+CAPI=2:
+name: lowrisc:ibex:ibex_core:0.1
+description: Ibex RISC-V CPU Core
+
+filesets:
+  rtl:
+    files:
+      - ibex_pkg.v
+      - ibex_alu.v
+      - ibex_branch_predict.v
+      - ibex_compressed_decoder.v
+      - ibex_controller.v
+      - ibex_core.v
+      - ibex_counter.v
+      - ibex_cs_registers.v
+      - ibex_csr.v
+      - ibex_decoder.v
+      - ibex_dummy_instr.v
+      - ibex_ex_block.v
+      - ibex_fetch_fifo.v
+      - ibex_icache.v
+      - ibex_id_stage.v
+      - ibex_if_stage.v
+      - ibex_load_store_unit.v
+      - ibex_multdiv_fast.v
+      - ibex_multdiv_slow.v
+      - ibex_pmp.v
+      - ibex_prefetch_buffer.v
+      - ibex_register_file_ff.v
+      - ibex_register_file_fpga.v
+      - ibex_register_file_latch.v
+      - ibex_wb_stage.v
+      - prim_clock_gating.v
+    file_type: verilogSource
+
+  constraints:
+    files:
+      - ibex_core.nangate.out.sdc:
+          file_type: SDC
+targets:
+  default: &default
+    filesets:
+      - rtl
+
+  synth:
+    <<: *default
+    default_tool: vivado
+    filesets:
+      - constraints
+    toplevel: ibex_core
+    tools:
+      vivado:
+        part: xc7a35tcpg236-1
