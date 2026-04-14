@@ -17,10 +17,11 @@ module ahb_decoder (
 );
     always_comb begin
         casez(HADDR)
-            32'h00_??????: MUX_SEL = 4'h0: // Slave 0
-            32'h01_??????: MUX_SEL = 4'h0: // Slave 1
-            32'h02_??????: MUX_SEL = 4'h0: // Slave 2
-            32'h03_??????: MUX_SEL = 4'h0: // Slave 3
+            32'h00_??_??_??: MUX_SEL = 4'h0; // Slave 0
+            32'h01_??_??_??: MUX_SEL = 4'h1; // Slave 1
+            32'h02_??_??_??: MUX_SEL = 4'h2; // Slave 2
+            32'h03_??_??_??: MUX_SEL = 4'h3; // Slave 3
+            32'h1?_??_??_??: MUX_SEL = 4'h4; // Slave 4
             default: MUX_SEL = 4'hF; // Invalid address
         endcase
     end

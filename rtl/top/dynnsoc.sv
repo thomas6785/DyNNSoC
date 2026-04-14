@@ -26,16 +26,18 @@ module dynnsoc (
     ahb_intf_s ahb_ram_if();
     ahb_intf_s ahb_gpio_if();
     ahb_intf_s ahb_uart_if();
+    ahb_intf_s ahb_mvu_if();
     instruction_fetch_if instr_if(); // connect CPU directly to imem, bypassing the AHB bus
 
     // ========================================
     // Declare interrupt request lines
     // ========================================
-    wire        IRQ_uart;
+    logic       IRQ_uart;
+    logic [7:0] mvu_irqs;
 
     wire [14:0] IRQ; // interrupt request vector to the core. Should remain high until addressed
     assign IRQ = {
-        13'b0, IRQ_uart, 1'b0
+        mvu_irqs, 5'b0, IRQ_uart, 1'b0
     };
 
     // ========================================
@@ -51,6 +53,8 @@ module dynnsoc (
     wire [11:0] led_rom;        // status output from ROM loader
     wire [15:0] led_gpio;       // led output from GPIO block
     assign led = ROMload ? {4'b0,led_rom} : led_gpio;    // choose which to display
+
+    logic [15:0] gpio_out1;
 
     // ======================== Signals for display on oscilloscope ===================
     assign JA = {HCLK, ahb_cpu_if.HTRANS[1], ahb_cpu_if.HREADY, ahb_cpu_if.HRESP, '0};
@@ -110,7 +114,18 @@ module dynnsoc (
         .slave_if_s0 (ahb_imem_if.interconn),
         .slave_if_s1 (ahb_ram_if.interconn),
         .slave_if_s2 (ahb_gpio_if.interconn),
-        .slave_if_s3 (ahb_uart_if.interconn)
+        .slave_if_s3 (ahb_uart_if.interconn),
+        .slave_if_s4 (ahb_mvu_if.interconn)
+    );
+
+    // ========================================
+    // MVU array
+    // ========================================
+    mvutop_wrapper MVU (
+        .HCLK,
+        .HRESETn,
+        .AHB_IF(ahb_mvu_if.slave),
+        .irq(mvu_irqs)
     );
 
     // ========================================
@@ -132,7 +147,7 @@ module dynnsoc (
         .AHB_IF         (ahb_gpio_if.slave),         // AHB slave interface
         // GPIO signals
         .gpio_out0      (led_gpio),                 // read-write address 0
-        .gpio_out1      (),                         // read-write address 4
+        .gpio_out1      (gpio_out1),                // read-write address 4
         .gpio_in0       (sw),                       // read only address 8
         .gpio_in1       ({11'b0, buttons})          // read only address C
     );

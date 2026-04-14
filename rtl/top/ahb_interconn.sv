@@ -18,7 +18,8 @@ module ahb_interconn (
     ahb_intf_s.interconn slave_if_s0,
     ahb_intf_s.interconn slave_if_s1,
     ahb_intf_s.interconn slave_if_s2,
-    ahb_intf_s.interconn slave_if_s3
+    ahb_intf_s.interconn slave_if_s3,
+    ahb_intf_s.interconn slave_if_s4
 );
     ahb_intf_s dummy_if();
     // A dummy for when no slave it selected
@@ -28,6 +29,7 @@ module ahb_interconn (
     `CONNECT_SLAVE_TO_MASTER(slave_if_s1, master_if);
     `CONNECT_SLAVE_TO_MASTER(slave_if_s2, master_if);
     `CONNECT_SLAVE_TO_MASTER(slave_if_s3, master_if);
+    `CONNECT_SLAVE_TO_MASTER(slave_if_s4, master_if);
     `CONNECT_SLAVE_TO_MASTER(dummy_if,    master_if);
     // I hate using macros but I really can't think of a cleaner way of doing this
     // Doing this for every single slave is very annoying... Would be nice if we could come up with a clean way of sharing this interface, but that starts to get messy when you have multiple masters (consider the fact that a master shouldn't need to be aware of which number master it is)
@@ -43,7 +45,7 @@ module ahb_interconn (
         .HSEL_S1    (slave_if_s1.HSEL),
         .HSEL_S2    (slave_if_s2.HSEL),
         .HSEL_S3    (slave_if_s3.HSEL),
-        .HSEL_S4    (),
+        .HSEL_S4    (slave_if_s4.HSEL),
         .HSEL_S5    (),
         .HSEL_S6    (),
         .HSEL_S7    (),
@@ -63,7 +65,7 @@ module ahb_interconn (
         .HRDATA_S1      (slave_if_s1.HRDATA),
         .HRDATA_S2      (slave_if_s2.HRDATA),
         .HRDATA_S3      (slave_if_s3.HRDATA),
-        .HRDATA_S4      (BAD_DATA),
+        .HRDATA_S4      (slave_if_s4.HRDATA),
         .HRDATA_S5      (BAD_DATA),
         .HRDATA_S6      (BAD_DATA),         // unused inputs give BAD_DATA
         .HRDATA_S7      (BAD_DATA),
@@ -77,7 +79,7 @@ module ahb_interconn (
         .HREADYOUT_S1   (slave_if_s1.HREADYOUT),
         .HREADYOUT_S2   (slave_if_s2.HREADYOUT),
         .HREADYOUT_S3   (slave_if_s3.HREADYOUT),
-        .HREADYOUT_S4   (1'b1),
+        .HREADYOUT_S4   (slave_if_s4.HREADYOUT),
         .HREADYOUT_S5   (1'b1),
         .HREADYOUT_S6   (1'b1),             // unused inputs must be tied to 1
         .HREADYOUT_S7   (1'b1),
@@ -91,7 +93,7 @@ module ahb_interconn (
         .HRESP_S1    (slave_if_s1.HRESP),    // never signal an error, so response is always OKAY
         .HRESP_S2    (slave_if_s2.HRESP),
         .HRESP_S3    (slave_if_s3.HRESP),
-        .HRESP_S4    (OKAY),
+        .HRESP_S4    (slave_if_s4.HRESP),
         .HRESP_S5    (OKAY),
         .HRESP_S6    (OKAY),    // unused reponse inputs should also be OKAY
         .HRESP_S7    (OKAY),
