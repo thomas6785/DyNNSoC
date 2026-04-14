@@ -11,3 +11,5 @@
 
 # Anything beginning "gig_" is to be gitignored
 **/gig_*
+
+build/
