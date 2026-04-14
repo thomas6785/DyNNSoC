@@ -12,6 +12,7 @@ $SOCROOT/rtl/utils/ram_2port_hetero.sv
 $SOCROOT/rtl/ahb_infra/ahb_decoder.sv
 $SOCROOT/rtl/ahb_infra/ahb_mux.v
 $SOCROOT/rtl/ahb_infra/ahb_dummy.v
+$SOCROOT/rtl/ahb_infra/ahb_transparent_arbiter.sv
 
 # Small simple slaves
 $SOCROOT/rtl/slaves/ahb_gpio.sv
