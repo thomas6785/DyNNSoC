@@ -15,8 +15,6 @@ module ibex_wrapper (
   // Memory interface for instruction fetches
   instruction_fetch_if.core instr_if
 );
-  reg [1:0] addr_offset;
-
   wire alert_minor_o;
   wire alert_major_o;
 
