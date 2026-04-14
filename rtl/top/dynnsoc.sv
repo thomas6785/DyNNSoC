@@ -125,7 +125,7 @@ module dynnsoc (
         .HCLK,
         .HRESETn,
         .AHB_IF(ahb_mvu_if.slave),
-        .irq(mvu_irqs)
+        .irq_flag(mvu_irqs)
     );
 
     // ========================================

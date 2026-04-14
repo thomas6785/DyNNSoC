@@ -31,7 +31,7 @@ void irq_handler_07(void) __attribute__((interrupt("machine")));
 void irq_handler_07(void) {
     GPIO_OUT1 = 0x00FF; // TODO remove this debug line
     waiting_for_interrupt = 0;
-    MVU_CSR(0) -> command = 0; // stop the MVU if it's still running (and clear the interrupt)
+    MVU_CSR(0) -> status = 1; // clear interrupt (w1c)
 }
 
 int main(void) {
@@ -60,7 +60,7 @@ int main(void) {
     GPIO_OUT1 = 0x3; // TODO remove this debug line
 
     for(i=0; i<50; i++) {
-        mvu_write_data(i*4, prng(i)); // write some random data to the input data memory bank
+        mvu_write_data(i*8, prng(i)); // write some random data to the input data memory bank
     } // 5*5 data points of 2 bits each
 
     GPIO_OUT1 = 0x4; // TODO remove this debug line
@@ -72,7 +72,7 @@ int main(void) {
     int kernel_side_length = 3;
     int weight_addr = 0;
     int input_data_addr = 0;
-    int output_data_addr = 8192;
+    int output_data_addr = 131072;
     GPIO_OUT1 = 0x5; // TODO remove this debug line
     MVU_CSR(0) -> wlength_1    =  1-1               ;
     MVU_CSR(0) -> wlength_2    =  1-1               ;
@@ -95,7 +95,7 @@ int main(void) {
     MVU_CSR(0) -> wbaseptr     =  weight_addr;
     MVU_CSR(0) -> ibaseptr     =  input_data_addr;
     MVU_CSR(0) -> obaseptr     =  output_data_addr;
-    MVU_CSR(0) -> omvusel      =  0;
+    MVU_CSR(0) -> omvusel      =  0xFF;
 
     // use 4 bits of weights, 2 bits of data, and output 4 bits of precision
     MVU_CSR(0) -> precision   = (4<<0)|(2<<6)|(4<<12);
@@ -111,6 +111,7 @@ int main(void) {
 
     // Read the output
     for(i=0; i<16; i++) {
+        GPIO_OUT1 = 0;
         GPIO_OUT1 = mvu_read_data(output_data_addr+8*i);
     }
     GPIO_OUT1 = 0x8; // TODO remove this debug line

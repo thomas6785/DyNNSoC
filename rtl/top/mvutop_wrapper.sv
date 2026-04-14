@@ -3,7 +3,7 @@ module mvutop_wrapper import mvu_pkg::*;(
     input logic HRESETn,
 
     // Outgoing interrupts, one from each MVU
-    output logic [NMVU-1:0] irq,
+    output logic [NMVU-1:0] irq_flag,
 
     // AHB Interface
     ahb_intf_s.slave AHB_IF
@@ -110,11 +110,11 @@ generate for (genvar_mvu_id = 0; genvar_mvu_id < NMVU; genvar_mvu_id = genvar_mv
         end : reset
         else if (csr_write && rHADDR.mvu_id == genvar_mvu_id) begin : write_logic
             unique case (mvu_pkg::mvu_csr_t'({rHADDR.addr[11:0],2'b00}))
-                mvu_pkg::CSR_MVUWBASEPTR : mvu_cfg_shadow[genvar_mvu_id].wbaseaddr  <= AHB_IF.HWDATA[BBWADDR-1 : 0];
-                mvu_pkg::CSR_MVUIBASEPTR : mvu_cfg_shadow[genvar_mvu_id].ibaseaddr  <= AHB_IF.HWDATA[BBDADDR-1 : 0];
-                mvu_pkg::CSR_MVUSBASEPTR : mvu_cfg_shadow[genvar_mvu_id].sbaseaddr  <= AHB_IF.HWDATA[BSBANKA-1 : 0];
-                mvu_pkg::CSR_MVUBBASEPTR : mvu_cfg_shadow[genvar_mvu_id].bbaseaddr  <= AHB_IF.HWDATA[BBBANKA-1 : 0];
-                mvu_pkg::CSR_MVUOBASEPTR : mvu_cfg_shadow[genvar_mvu_id].obaseaddr  <= AHB_IF.HWDATA[BBDADDR-1 : 0];
+                mvu_pkg::CSR_MVUWBASEPTR : mvu_cfg_shadow[genvar_mvu_id].wbaseaddr  <= AHB_IF.HWDATA[BBWADDR-1 : 0] >> (9); // right-shifted because the LSBs are "word-select" bits used by the AHB interface but not used internally (bit widths are wider internally, so address widths are smaller)
+                mvu_pkg::CSR_MVUIBASEPTR : mvu_cfg_shadow[genvar_mvu_id].ibaseaddr  <= AHB_IF.HWDATA[BBDADDR-1 : 0] >> (3);
+                mvu_pkg::CSR_MVUSBASEPTR : mvu_cfg_shadow[genvar_mvu_id].sbaseaddr  <= AHB_IF.HWDATA[BSBANKA-1 : 0] >> (7);
+                mvu_pkg::CSR_MVUBBASEPTR : mvu_cfg_shadow[genvar_mvu_id].bbaseaddr  <= AHB_IF.HWDATA[BBBANKA-1 : 0] >> (8);
+                mvu_pkg::CSR_MVUOBASEPTR : mvu_cfg_shadow[genvar_mvu_id].obaseaddr  <= AHB_IF.HWDATA[BBDADDR-1 : 0] >> (3);
                 mvu_pkg::CSR_MVUWJUMP_0  : mvu_cfg_shadow[genvar_mvu_id].wjump[0]   <= AHB_IF.HWDATA[BJUMP-1 : 0];
                 mvu_pkg::CSR_MVUWJUMP_1  : mvu_cfg_shadow[genvar_mvu_id].wjump[1]   <= AHB_IF.HWDATA[BJUMP-1 : 0];
                 mvu_pkg::CSR_MVUWJUMP_2  : mvu_cfg_shadow[genvar_mvu_id].wjump[2]   <= AHB_IF.HWDATA[BJUMP-1 : 0];
@@ -168,7 +168,7 @@ generate for (genvar_mvu_id = 0; genvar_mvu_id < NMVU; genvar_mvu_id = genvar_mv
                     mvu_cfg_shadow[genvar_mvu_id].d_signed   <= AHB_IF.HWDATA[25];
                 end
                 mvu_pkg::CSR_MVUSTATUS   : begin
-                    $display("AHB attempted write to read-only register CSR_MVUSTATUS!"); // not synthesisable, obviously
+                    // clear the MVU flag if there is a write to this reg; logic for that is elsewhere
                 end
                 mvu_pkg::CSR_MVUCOMMAND  : begin
                     // CSR_MVUCOMMAND is the only register without shadow regs
@@ -200,7 +200,6 @@ generate for(i=0; i < NMVU; i = i+1) begin
     always_ff @(posedge HCLK) begin
         if (~HRESETn) begin
             mvu_cfg_live[i] <= '{default: '0}; // reset to all zeros
-            irq[i] <= 1'b0;
         end else begin
             // If a write to the MVUCOMMAND register occurs for this MVU, copy the shadow register to the live config signals and set the start bit
             // (the start signal will be delayed one cycle to allow the other config signals to propagate first)
@@ -210,10 +209,8 @@ generate for(i=0; i < NMVU; i = i+1) begin
 
                 mvu_cfg_live[i].countdown <= AHB_IF.HWDATA[BCNTDWN-1 : 0];
                 mvu_cfg_live[i].mul_mode  <= AHB_IF.HWDATA[31:30];
-                irq[i] <= irq_pulse[i]; // clear any outstanding interrupt - unless another one is arriving right now
             end else begin
                 mvu_cfg_live[i].start <= 1'b0;
-                irq[i] <= irq_pulse[i] | irq[i]; // sticky behaviour for the interrupts
             end
         end
     end
@@ -223,9 +220,24 @@ end endgenerate
 logic [31:0] csr_read_data;
 always_comb begin // only the status register is readable
     unique case (mvu_pkg::mvu_csr_t'({rHADDR.addr[11:0],2'b00})) // align to word addresses
-        mvu_pkg::CSR_MVUSTATUS             : csr_read_data = {31'b0, mvu_ext_if.done[rHADDR.mvu_id]}; // read-only register
+        mvu_pkg::CSR_MVUSTATUS             : csr_read_data = {31'b0, irq_flag[rHADDR.mvu_id]}; // show the interrupt flag for the selected MVU. DOES NOT CLEAR ON READ, write one to clear
         default : csr_read_data = '0; // invalid register address
     endcase
+end
+
+// Make the interrupt pulse stick
+always_ff @ (posedge HCLK) begin
+    if (!HRESETn) begin
+        irq_flag <= '0;
+    end else begin
+        if (csr_write && ((mvu_pkg::mvu_csr_t'({rHADDR.addr[11:0],2'b00})) == mvu_pkg::CSR_MVUSTATUS)) begin
+            irq_flag <= irq_flag & ~(AHB_IF.HWDATA[0] << rHADDR.mvu_id);
+            // clear the flag for this MVU if there is a write to the status register with bit 0 set
+        end else begin
+            irq_flag <= irq_flag | irq_pulse;
+            // set flag when we see a pulse, and keep it there until cleared by a write to CSR_MVUSTATUS
+        end
+    end
 end
 
 // Connect weights for writing

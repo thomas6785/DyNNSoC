@@ -11,13 +11,13 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="433,244.480 ns"></ZoomStartTime>
-      <ZoomEndTime time="433,550.693 ns"></ZoomEndTime>
-      <Cursor1Time time="433,318.381 ns"></Cursor1Time>
+      <ZoomStartTime time="383.250088 us"></ZoomStartTime>
+      <ZoomEndTime time="591.848532 us"></ZoomEndTime>
+      <Cursor1Time time="446.363299 us"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="242"></NameColumnWidth>
-      <ValueColumnWidth column_width="127"></ValueColumnWidth>
+      <ValueColumnWidth column_width="123"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="19" />
    <wvobject type="group" fp_name="group12">
@@ -241,7 +241,6 @@
    <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_cfg_shadow">
       <obj_property name="ElementShortName">mvu_cfg_shadow[7:0]</obj_property>
       <obj_property name="ObjectShortName">mvu_cfg_shadow[7:0]</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_cfg_shadow[7]">
          <obj_property name="ElementShortName">[7]</obj_property>
          <obj_property name="ObjectShortName">[7]</obj_property>
@@ -275,6 +274,38 @@
          <obj_property name="ObjectShortName">[0]</obj_property>
          <obj_property name="isExpanded"></obj_property>
       </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_cfg_shadow[7]">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">[7]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_cfg_shadow[6]">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">[6]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_cfg_shadow[5]">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">[5]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_cfg_shadow[4]">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">[4]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_cfg_shadow[3]">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">[3]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_cfg_shadow[2]">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">[2]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_cfg_shadow[1]">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">[1]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_cfg_shadow[0]">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">[0]</obj_property>
+      </wvobject>
    </wvobject>
    <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_cfg_live">
       <obj_property name="ElementShortName">mvu_cfg_live[7:0]</obj_property>
@@ -283,7 +314,6 @@
    <wvobject type="group" fp_name="group795">
       <obj_property name="label">MVUTOP Wrapper</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject type="logic" fp_name="/TB_toplevel/dut/MVU/csr_write">
          <obj_property name="ElementShortName">csr_write</obj_property>
          <obj_property name="ObjectShortName">csr_write</obj_property>
@@ -365,6 +395,26 @@
             <obj_property name="ObjectShortName">.byte_sel[1:0]</obj_property>
             <obj_property name="Radix">HEXRADIX</obj_property>
          </wvobject>
+         <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/rHADDR.reg_type">
+            <obj_property name="ElementShortName">.reg_type[3:0]</obj_property>
+            <obj_property name="ObjectShortName">.reg_type[3:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/rHADDR.mvu_id">
+            <obj_property name="ElementShortName">.mvu_id[3:0]</obj_property>
+            <obj_property name="ObjectShortName">.mvu_id[3:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/rHADDR.reserved_1">
+            <obj_property name="ElementShortName">.reserved_1[1:0]</obj_property>
+            <obj_property name="ObjectShortName">.reserved_1[1:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/rHADDR.addr">
+            <obj_property name="ElementShortName">.addr[15:0]</obj_property>
+            <obj_property name="ObjectShortName">.addr[15:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/rHADDR.byte_sel">
+            <obj_property name="ElementShortName">.byte_sel[1:0]</obj_property>
+            <obj_property name="ObjectShortName">.byte_sel[1:0]</obj_property>
+         </wvobject>
       </wvobject>
       <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/rHSIZE">
          <obj_property name="ElementShortName">rHSIZE[2:0]</obj_property>
@@ -374,10 +424,6 @@
          <obj_property name="ElementShortName">rHWRITE</obj_property>
          <obj_property name="ObjectShortName">rHWRITE</obj_property>
       </wvobject>
-   </wvobject>
-   <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/irq">
-      <obj_property name="ElementShortName">irq[7:0]</obj_property>
-      <obj_property name="ObjectShortName">irq[7:0]</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu/irq">
       <obj_property name="ElementShortName">irq[7:0]</obj_property>
@@ -482,5 +528,9 @@
          <obj_property name="ElementShortName">nstate[4:0]</obj_property>
          <obj_property name="ObjectShortName">nstate[4:0]</obj_property>
       </wvobject>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_toplevel/dut/MVU/mvu/\mvuarray[0].mvuunit /wr_en">
+      <obj_property name="ElementShortName">wr_en</obj_property>
+      <obj_property name="ObjectShortName">wr_en</obj_property>
    </wvobject>
 </wave_config>

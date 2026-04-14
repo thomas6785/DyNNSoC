@@ -53,7 +53,7 @@ module TB_toplevel;
             repeat(200) @(posedge clk50);
             $display("          Asserting slave IRQ %d",i);
             force dut.IRQ = 15'b1 << i;
-            repeat(3) @(posedge clk50);  // hold IRQ high for a few cycles to make sure the core sees it
+            repeat(4) @(posedge clk50);  // hold IRQ high for a few cycles to make sure the core sees it
             release dut.IRQ;
             $display("          Released slave IRQ %d",i);
             repeat(100) @(posedge clk50); // wait for the ISR to finish
