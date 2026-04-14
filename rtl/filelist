@@ -28,8 +28,9 @@ $SOCROOT/rtl/slaves/uart/ahb_uart.v
 # $SOCROOT/rtl/cortex_m0/cortexm0ds_logic.v
 
 # MVU files
--f $SOCROOT/ip/MVU/filelist
-$SOCROOT/rtl/top/mvutop_wrapper.sv
+# -f $SOCROOT/ip/MVU/filelist
+# $SOCROOT/rtl/top/mvutop_wrapper.sv
+$SOCROOT/rtl/stubs/mvutop_wrapper_STUB.sv
 
 # Ibex files
 -f $SOCROOT/ip/ibex/filelist
