@@ -1,4 +1,3 @@
--sv
 # Utilities for the SoC top
 $SOCROOT/rtl/utils/interfaces.sv
 $SOCROOT/rtl/utils/reset_gen.v
@@ -10,7 +9,7 @@ $SOCROOT/rtl/utils/ram_2port_true.sv
 $SOCROOT/rtl/utils/ram_2port_hetero.sv
 
 # AHB utilities
-$SOCROOT/rtl/ahb_infra/ahb_decoder.v
+$SOCROOT/rtl/ahb_infra/ahb_decoder.sv
 $SOCROOT/rtl/ahb_infra/ahb_mux.v
 $SOCROOT/rtl/ahb_infra/ahb_dummy.v
 
@@ -28,8 +27,12 @@ $SOCROOT/rtl/slaves/uart/ahb_uart.v
 # $SOCROOT/rtl/cortex_m0/CORTEXM0DS.v
 # $SOCROOT/rtl/cortex_m0/cortexm0ds_logic.v
 
+# MVU files
+-f $SOCROOT/ip/MVU/filelist
+$SOCROOT/rtl/top/mvutop_wrapper.sv
+
 # Ibex files
--f $SOCROOT/rtl/ibex/filelist
+-f $SOCROOT/ip/ibex/filelist
 $SOCROOT/rtl/top/ibex_wrapper.sv
 
 # SoC top
