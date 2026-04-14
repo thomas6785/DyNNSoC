@@ -11,15 +11,17 @@ module tb_dmac;
     localparam TIMEOUT     = 10000;
 
     // ---------- Clock and reset ----------
-    logic hclk;
-    logic hresetn;
+    logic HCLK;
+    logic HRESETn;
 
-    initial hclk = 0;
-    always #(CLK_PERIOD/2) hclk = ~hclk;
+    initial HCLK = 0;
+    always #(CLK_PERIOD/2) HCLK = ~HCLK;
 
-    // ---------- AHB interface ----------
-    ahb_intf_m #(.ADDR_WIDTH(32), .DATA_WIDTH(32)) dmac_bus_intf ( hclk, hresetn );
-    ahb_intf_s #(.ADDR_WIDTH(32), .DATA_WIDTH(32)) regs_bus_intf ( hclk, hresetn );
+    // ---------- AHB interfaces ----------
+    ahb_intf_s #(.ADDR_WIDTH(32), .DATA_WIDTH(32)) config_intf (); // drives the DMA
+    ahb_intf_m #(.ADDR_WIDTH(32), .DATA_WIDTH(32)) dmac_bus_intf (); // driven by the DMA
+    ahb_intf_s #(.ADDR_WIDTH(32), .DATA_WIDTH(32)) regs_bus_intf (); // drives the test registers
+    // Hook up the DMA to the test registers
     ahb_1to1_interconnect interconn (
         .master (dmac_bus_intf.interconn),
         .slave  (regs_bus_intf.interconn)
@@ -31,6 +33,8 @@ module tb_dmac;
     ahb_rw_regs #(
         .NUM_REGS (NUM_REGS)
     ) slave (
+        .HCLK,
+        .HRESETn,
         .bus      (regs_bus_intf),
         .regs_out (regs_out)
     );
@@ -42,15 +46,12 @@ module tb_dmac;
     logic [15:0] config_transfer_size;
     logic        irq;
 
-    dma dut (
-        .dma_bus                 (dmac_bus_intf),
-        .clk                     (hclk),
-        .reset                   (hresetn),
-        .start_signal            (start_signal),
-        .config_in_src_addr      (config_src_addr),
-        .config_in_dest_addr     (config_dest_addr),
-        .config_in_transfer_size (config_transfer_size),
-        .irq                     (irq)
+    ahb_dma dut (
+        .HCLK,
+        .HRESETn,
+        .master_if               (dmac_bus_intf),
+        .config_if               (config_intf),
+        .irq_flag                (irq)
     );
 
     // ---------- Helpers ----------
@@ -67,6 +68,13 @@ module tb_dmac;
         end
     endtask
 
+    assign config_intf.HREADY = config_intf.HREADYOUT;
+    assign config_intf.HSEL = 1'b1;
+
+    `define AHB_WRITE(addr,data)   config_intf.HTRANS <= 2'b10; config_intf.HWRITE <= 1; config_intf.HADDR <= addr;   @(posedge HCLK iff config_intf.HREADYOUT); config_intf.HWDATA <= data;
+    `define AHB_IDLE               config_intf.HTRANS <= 2'b00;
+    `define AHB_FINISH             config_intf.HTRANS <= 2'b00; @(posedge HCLK iff config_intf.HREADYOUT);
+
     // ---------- Test sequence ----------
     int i;
     initial begin
@@ -77,23 +85,24 @@ module tb_dmac;
         fail_count = 0;
 
         // Initialise DMA config inputs
-        start_signal         = 1'b0;
-        config_src_addr      = 32'h0;
-        config_dest_addr     = 32'h0;
-        config_transfer_size = 16'h0;
+        `AHB_WRITE(0, 32'h0) ; // src addr
+        `AHB_WRITE(4, 32'h0) ; // dest addr
+        `AHB_WRITE(8, 32'h0) ; // transfer size
+        `AHB_WRITE(12, 32'h0) ; // start signal (only LSB is used)
+        `AHB_IDLE ;
 
         // ===== Reset =====
-        hresetn = 1'b0;
-        repeat (5) @(posedge hclk);
-        hresetn = 1'b1;
-        repeat (2) @(posedge hclk);
+        HRESETn = 1'b0;
+        repeat (5) @(posedge HCLK);
+        HRESETn = 1'b1;
+        repeat (2) @(posedge HCLK);
 
         // ===== Force initial data into source registers 0-15 =====
         $display("\n=== Loading source data into registers 0-15 ===");
         for (i = 0; i < NUM_XFERS; i++) begin
             slave.regs[i] = 32'hCAFE_0000 + i;
         end
-        @(posedge hclk);
+        @(posedge HCLK);
 
         // Sanity-check: source data is present
         for (i = 0; i < NUM_XFERS; i++) begin
@@ -103,15 +112,11 @@ module tb_dmac;
 
         // ===== Configure DMA =====
         $display("\n=== Configuring DMA: src=0x00, dest=0x80, count=%0d ===", NUM_XFERS);
-        config_src_addr      = 32'h0000_0000;   // address 0   -> regs[0..15]
-        config_dest_addr     = 32'h0000_0080;   // address 128 -> regs[32..47]
-        config_transfer_size = NUM_XFERS;
-
-        // ===== Start DMA =====
-        @(posedge hclk);
-        start_signal = 1'b1;
-        @(posedge hclk);
-        start_signal = 1'b0;
+        `AHB_WRITE(0,32'h0000_0000); // src addr  // address 0   -> regs[0..15]
+        `AHB_WRITE(4,32'h0000_0080); // dest addr // address 128 -> regs[32..47]
+        `AHB_WRITE(8,NUM_XFERS);     // transfer size
+        `AHB_WRITE(12,'1);           // start signal
+        `AHB_IDLE;
 
         // ===== Wait for DMA to finish =====
         $display("\n=== Waiting for DMA to complete ===");
@@ -121,13 +126,13 @@ module tb_dmac;
             cycles      = 0;
             seen_active = 1'b0;
             while (cycles < TIMEOUT) begin
-                @(posedge hclk);
+                @(posedge HCLK);
                 cycles++;
                 // Track that the DMA left IDLE at least once
-                if (dut.current_state != dut.IDLE_STATE)
+                if (dut.dma_controller.current_state != dut.dma_controller.IDLE_STATE)
                     seen_active = 1'b1;
                 // Done when DMA returns to IDLE after having been active
-                if (seen_active && dut.current_state == dut.IDLE_STATE) begin
+                if (seen_active && dut.dma_controller.current_state == dut.dma_controller.IDLE_STATE) begin
                     $display("DMA completed after %0d cycles", cycles);
                     break;
                 end
@@ -139,7 +144,7 @@ module tb_dmac;
         end
 
         // A few extra cycles for the final write to settle
-        repeat (5) @(posedge hclk);
+        repeat (5) @(posedge HCLK);
 
         // ===== Verify destination registers 32-47 =====
         $display("\n=== Verifying destination registers (regs 32-47) ===");

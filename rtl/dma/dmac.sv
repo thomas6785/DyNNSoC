@@ -1,22 +1,19 @@
 `timescale 1ns/1ps
 
-module dma #(
+module dmac #(
     parameter BAD_ADDR_SPACE_VALUE = 32'h1,
     parameter BAD_ADDR_SPACE_MASK = 32'h0000_0000
 ) (
     ahb_intf_m.master dma_bus, // Interface for AHB bus communication
     //ahb_intf_s.slave config_bus, // Interface for configuration bus
-    input [31:0] config_in_src_addr, // TODO migrate to config registers
-    input [31:0] config_in_dest_addr, // TODO migrate to config registers
-    input [15:0] config_in_transfer_size, // TODO migrate to config registers
-    input start_signal, // TODO migrate to config registers
+    input [31:0] config_in_src_addr,
+    input [31:0] config_in_dest_addr,
+    input [15:0] config_in_transfer_size,
+    input start_signal,
     input logic clk,
     input logic reset,
     output logic irq
 );
-    // Instantiate the control registers
-    
-
     // Create an FSM for the state of the DMA controller
     // Typical flow:
     //                             IDLE STATE  <------------------------------------------------------------|
@@ -79,7 +76,7 @@ module dma #(
                     next_state = SRC_DATA_DEST_ADDR;
                 end
                 SRC_DATA_DEST_ADDR: begin
-                    if (!dma_bus.hready) begin
+                    if (!dma_bus.HREADY) begin
                         next_state = SRC_DATA_DEST_ADDR;
                     end else if (counter == 0) begin
                         next_state = FINAL_DEST_DATA;
@@ -88,14 +85,14 @@ module dma #(
                     end
                 end
                 SRC_ADDR_DEST_DATA: begin
-                    if (!dma_bus.hready) begin
+                    if (!dma_bus.HREADY) begin
                         next_state = SRC_ADDR_DEST_DATA;
                     end else begin
                         next_state = SRC_DATA_DEST_ADDR;
                     end
                 end
                 FINAL_DEST_DATA: begin
-                    if (!dma_bus.hready) begin
+                    if (!dma_bus.HREADY) begin
                         next_state = FINAL_DEST_DATA;
                     end else begin
                         next_state = IDLE_STATE;
@@ -107,32 +104,33 @@ module dma #(
     end
 
     // Output logic based on the current state
+
     always_comb begin
         // Default values for outputs
-        dma_bus.hwrite = (current_state == SRC_DATA_DEST_ADDR); // 'write' is valid during the ADDRESS phase so we want it high when the address phase is on destination
+        dma_bus.HWRITE = (current_state == SRC_DATA_DEST_ADDR); // 'write' is valid during the ADDRESS phase so we want it high when the address phase is on destination
 
-        dma_bus.haddr = 
+        dma_bus.HADDR =
             (current_state == INITIAL_SRC_ADDR) ? src_addr :
             (current_state == SRC_DATA_DEST_ADDR) ? dest_addr :
             (current_state == SRC_ADDR_DEST_DATA) ? src_addr :
             32'b0; // Default to address 0
 
-        dma_bus.htrans =
+        dma_bus.HTRANS =
             ((current_state == INITIAL_SRC_ADDR) ||
              (current_state == SRC_DATA_DEST_ADDR) ||
              (current_state == SRC_ADDR_DEST_DATA)) ? 2'b10 : 2'b00;
             // 'NONSEQ' for address phases, 'IDLE' otherwise
     end
 
-    assign dma_bus.hwdata = data_buffer; // Data to be written during the data phase
+    assign dma_bus.HWDATA = data_buffer; // Data to be written during the data phase
 
     // Data buffer updates after every read
     always_ff @(posedge clk) begin
         if (!reset) begin
             data_buffer <= 32'b0; // Clear data buffer on reset
         end else
-        if (current_state == SRC_DATA_DEST_ADDR && dma_bus.hready) begin
-            data_buffer <= dma_bus.hrdata; // Capture read data into buffer
+        if (current_state == SRC_DATA_DEST_ADDR && dma_bus.HREADY) begin
+            data_buffer <= dma_bus.HRDATA; // Capture read data into buffer
         end
     end
 
@@ -160,6 +158,7 @@ module dma #(
         end
     end
 
+
     always_comb begin
         src_addr_next = src_addr; // Default to no change
         dest_addr_next = dest_addr; // Default to no change
@@ -170,16 +169,16 @@ module dma #(
             dest_addr_next = config_in_dest_addr; // Load destination address from config bus
             counter_next = config_in_transfer_size; // Load transfer size from config bus
         end
-        if (current_state == SRC_DATA_DEST_ADDR && dma_bus.hready) begin
+        if (current_state == SRC_DATA_DEST_ADDR && dma_bus.HREADY) begin
             src_addr_next = src_addr + 4; // Increment source address for next transfer
             counter_next = counter - 1; // Decrement transfer counter
         end
-        if (current_state == SRC_ADDR_DEST_DATA && dma_bus.hready) begin
+        if (current_state == SRC_ADDR_DEST_DATA && dma_bus.HREADY) begin
             dest_addr_next = dest_addr + 4; // Increment destination address for next transfer
         end
         // TODO allow disabling the increment e.g. for SPI or UART peripherals
     end
 
     // IRQ generation logic
-    assign irq = (current_state == FINAL_DEST_DATA) && dma_bus.hready;
+    assign irq = (current_state == FINAL_DEST_DATA) && dma_bus.HREADY;
 endmodule

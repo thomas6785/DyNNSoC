@@ -1,7 +1,7 @@
--sv
-$AHBDIR/ahb_intf.sv
-$SOCROOT/rtl/lfsr.sv
-$AHBDIR/ahb_rw_regs_slow.sv
-$AHBDIR/ahb_1to1_interconnect.sv
-dmac.sv
-tb_dmac.sv
+$SOCROOT/rtl/ahb_infra/ahb_rw_regs.sv
+$SOCROOT/rtl/ahb_infra/ahb_to_csr.sv
+$SOCROOT/rtl/ahb_infra/ahb_1to1_interconnect.sv
+$SOCROOT/rtl/ahb_infra/ahb_intf.sv
+$SOCROOT/rtl/dma/dmac.sv
+$SOCROOT/rtl/dma/ahb_dma.sv
+$SOCROOT/rtl/dma/tests/tb_dmac.sv
