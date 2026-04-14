@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_sim.wdb" id="1">
+         <top_modules>
+            <top_module name="TB_toplevel" />
+            <top_module name="mvu_pkg" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="433,244.480 ns"></ZoomStartTime>
+      <ZoomEndTime time="433,550.693 ns"></ZoomEndTime>
+      <Cursor1Time time="433,318.381 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="242"></NameColumnWidth>
+      <ValueColumnWidth column_width="127"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="19" />
+   <wvobject type="group" fp_name="group12">
+      <obj_property name="label">CPU AHB</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_cpu_if/HWDATA">
+         <obj_property name="ElementShortName">HWDATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">HWDATA[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_cpu_if/HWRITE">
+         <obj_property name="ElementShortName">HWRITE</obj_property>
+         <obj_property name="ObjectShortName">HWRITE</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_cpu_if/HSIZE">
+         <obj_property name="ElementShortName">HSIZE[2:0]</obj_property>
+         <obj_property name="ObjectShortName">HSIZE[2:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_cpu_if/HPROT">
+         <obj_property name="ElementShortName">HPROT[3:0]</obj_property>
+         <obj_property name="ObjectShortName">HPROT[3:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_cpu_if/HTRANS">
+         <obj_property name="ElementShortName">HTRANS[1:0]</obj_property>
+         <obj_property name="ObjectShortName">HTRANS[1:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_cpu_if/HADDR">
+         <obj_property name="ElementShortName">HADDR[31:0]</obj_property>
+         <obj_property name="ObjectShortName">HADDR[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_cpu_if/HRDATA">
+         <obj_property name="ElementShortName">HRDATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">HRDATA[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_cpu_if/HREADY">
+         <obj_property name="ElementShortName">HREADY</obj_property>
+         <obj_property name="ObjectShortName">HREADY</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_cpu_if/HRESP">
+         <obj_property name="ElementShortName">HRESP</obj_property>
+         <obj_property name="ObjectShortName">HRESP</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_cpu_if/ADDR_WIDTH">
+         <obj_property name="ElementShortName">ADDR_WIDTH[31:0]</obj_property>
+         <obj_property name="ObjectShortName">ADDR_WIDTH[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_cpu_if/DATA_WIDTH">
+         <obj_property name="ElementShortName">DATA_WIDTH[31:0]</obj_property>
+         <obj_property name="ObjectShortName">DATA_WIDTH[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="group" fp_name="group26">
+      <obj_property name="label">MVU AHB</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_mvu_if/HRDATA">
+         <obj_property name="ElementShortName">HRDATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">HRDATA[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_mvu_if/HREADYOUT">
+         <obj_property name="ElementShortName">HREADYOUT</obj_property>
+         <obj_property name="ObjectShortName">HREADYOUT</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_mvu_if/HRESP">
+         <obj_property name="ElementShortName">HRESP</obj_property>
+         <obj_property name="ObjectShortName">HRESP</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_mvu_if/HWDATA">
+         <obj_property name="ElementShortName">HWDATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">HWDATA[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_mvu_if/HWRITE">
+         <obj_property name="ElementShortName">HWRITE</obj_property>
+         <obj_property name="ObjectShortName">HWRITE</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_mvu_if/HSIZE">
+         <obj_property name="ElementShortName">HSIZE[2:0]</obj_property>
+         <obj_property name="ObjectShortName">HSIZE[2:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_mvu_if/HPROT">
+         <obj_property name="ElementShortName">HPROT[3:0]</obj_property>
+         <obj_property name="ObjectShortName">HPROT[3:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_mvu_if/HTRANS">
+         <obj_property name="ElementShortName">HTRANS[1:0]</obj_property>
+         <obj_property name="ObjectShortName">HTRANS[1:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_mvu_if/HADDR">
+         <obj_property name="ElementShortName">HADDR[31:0]</obj_property>
+         <obj_property name="ObjectShortName">HADDR[31:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_mvu_if/HREADY">
+         <obj_property name="ElementShortName">HREADY</obj_property>
+         <obj_property name="ObjectShortName">HREADY</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_mvu_if/HSEL">
+         <obj_property name="ElementShortName">HSEL</obj_property>
+         <obj_property name="ObjectShortName">HSEL</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_mvu_if/ADDR_WIDTH">
+         <obj_property name="ElementShortName">ADDR_WIDTH[31:0]</obj_property>
+         <obj_property name="ObjectShortName">ADDR_WIDTH[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_mvu_if/DATA_WIDTH">
+         <obj_property name="ElementShortName">DATA_WIDTH[31:0]</obj_property>
+         <obj_property name="ObjectShortName">DATA_WIDTH[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="group" fp_name="group31">
+      <obj_property name="label">IF IF</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/instr_if/rdata">
+         <obj_property name="ElementShortName">rdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">rdata[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/instr_if/addr">
+         <obj_property name="ElementShortName">addr[31:0]</obj_property>
+         <obj_property name="ObjectShortName">addr[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/instr_if/req">
+         <obj_property name="ElementShortName">req</obj_property>
+         <obj_property name="ObjectShortName">req</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/instr_if/ready">
+         <obj_property name="ElementShortName">ready</obj_property>
+         <obj_property name="ObjectShortName">ready</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="group" fp_name="group51">
+      <obj_property name="label">MVU EXT IF</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_ext_if/done">
+         <obj_property name="ElementShortName">done[7:0]</obj_property>
+         <obj_property name="ObjectShortName">done[7:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_ext_if/wrw_addr">
+         <obj_property name="ElementShortName">wrw_addr[7:0][15:0]</obj_property>
+         <obj_property name="ObjectShortName">wrw_addr[7:0][15:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_ext_if/wrw_word">
+         <obj_property name="ElementShortName">wrw_word[7:0][31:0]</obj_property>
+         <obj_property name="ObjectShortName">wrw_word[7:0][31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_ext_if/wrw_en">
+         <obj_property name="ElementShortName">wrw_en[7:0]</obj_property>
+         <obj_property name="ObjectShortName">wrw_en[7:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_ext_if/rdc_en">
+         <obj_property name="ElementShortName">rdc_en[7:0]</obj_property>
+         <obj_property name="ObjectShortName">rdc_en[7:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_ext_if/rdc_grnt">
+         <obj_property name="ElementShortName">rdc_grnt[7:0]</obj_property>
+         <obj_property name="ObjectShortName">rdc_grnt[7:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_ext_if/rdc_addr">
+         <obj_property name="ElementShortName">rdc_addr[7:0][14:0]</obj_property>
+         <obj_property name="ObjectShortName">rdc_addr[7:0][14:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_ext_if/rdc_word">
+         <obj_property name="ElementShortName">rdc_word[7:0][63:0]</obj_property>
+         <obj_property name="ObjectShortName">rdc_word[7:0][63:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_ext_if/wrc_en">
+         <obj_property name="ElementShortName">wrc_en[7:0]</obj_property>
+         <obj_property name="ObjectShortName">wrc_en[7:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_ext_if/wrc_grnt">
+         <obj_property name="ElementShortName">wrc_grnt[7:0]</obj_property>
+         <obj_property name="ObjectShortName">wrc_grnt[7:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_ext_if/wrc_addr">
+         <obj_property name="ElementShortName">wrc_addr[14:0]</obj_property>
+         <obj_property name="ObjectShortName">wrc_addr[14:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_ext_if/wrc_word">
+         <obj_property name="ElementShortName">wrc_word[63:0]</obj_property>
+         <obj_property name="ObjectShortName">wrc_word[63:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_ext_if/wrs_en">
+         <obj_property name="ElementShortName">wrs_en[7:0]</obj_property>
+         <obj_property name="ObjectShortName">wrs_en[7:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_ext_if/wrs_addr">
+         <obj_property name="ElementShortName">wrs_addr[10:0]</obj_property>
+         <obj_property name="ObjectShortName">wrs_addr[10:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_ext_if/wrs_word">
+         <obj_property name="ElementShortName">wrs_word[31:0]</obj_property>
+         <obj_property name="ObjectShortName">wrs_word[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_ext_if/wrb_en">
+         <obj_property name="ElementShortName">wrb_en[7:0]</obj_property>
+         <obj_property name="ObjectShortName">wrb_en[7:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_ext_if/wrb_addr">
+         <obj_property name="ElementShortName">wrb_addr[11:0]</obj_property>
+         <obj_property name="ObjectShortName">wrb_addr[11:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_ext_if/wrb_word">
+         <obj_property name="ElementShortName">wrb_word[31:0]</obj_property>
+         <obj_property name="ObjectShortName">wrb_word[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_toplevel/dut/HCLK">
+      <obj_property name="ElementShortName">HCLK</obj_property>
+      <obj_property name="ObjectShortName">HCLK</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_toplevel/dut/HRESETn">
+      <obj_property name="ElementShortName">HRESETn</obj_property>
+      <obj_property name="ObjectShortName">HRESETn</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_toplevel/dut/led">
+      <obj_property name="ElementShortName">led[15:0]</obj_property>
+      <obj_property name="ObjectShortName">led[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_toplevel/dut/gpio_out1">
+      <obj_property name="ElementShortName">gpio_out1[15:0]</obj_property>
+      <obj_property name="ObjectShortName">gpio_out1[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_cfg_shadow">
+      <obj_property name="ElementShortName">mvu_cfg_shadow[7:0]</obj_property>
+      <obj_property name="ObjectShortName">mvu_cfg_shadow[7:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_cfg_shadow[7]">
+         <obj_property name="ElementShortName">[7]</obj_property>
+         <obj_property name="ObjectShortName">[7]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_cfg_shadow[6]">
+         <obj_property name="ElementShortName">[6]</obj_property>
+         <obj_property name="ObjectShortName">[6]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_cfg_shadow[5]">
+         <obj_property name="ElementShortName">[5]</obj_property>
+         <obj_property name="ObjectShortName">[5]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_cfg_shadow[4]">
+         <obj_property name="ElementShortName">[4]</obj_property>
+         <obj_property name="ObjectShortName">[4]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_cfg_shadow[3]">
+         <obj_property name="ElementShortName">[3]</obj_property>
+         <obj_property name="ObjectShortName">[3]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_cfg_shadow[2]">
+         <obj_property name="ElementShortName">[2]</obj_property>
+         <obj_property name="ObjectShortName">[2]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_cfg_shadow[1]">
+         <obj_property name="ElementShortName">[1]</obj_property>
+         <obj_property name="ObjectShortName">[1]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_cfg_shadow[0]">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">[0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu_cfg_live">
+      <obj_property name="ElementShortName">mvu_cfg_live[7:0]</obj_property>
+      <obj_property name="ObjectShortName">mvu_cfg_live[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="group" fp_name="group795">
+      <obj_property name="label">MVUTOP Wrapper</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/MVU/csr_write">
+         <obj_property name="ElementShortName">csr_write</obj_property>
+         <obj_property name="ObjectShortName">csr_write</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/MVU/csr_read">
+         <obj_property name="ElementShortName">csr_read</obj_property>
+         <obj_property name="ObjectShortName">csr_read</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/MVU/data_write">
+         <obj_property name="ElementShortName">data_write</obj_property>
+         <obj_property name="ObjectShortName">data_write</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/MVU/data_read">
+         <obj_property name="ElementShortName">data_read</obj_property>
+         <obj_property name="ObjectShortName">data_read</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/MVU/weight_write">
+         <obj_property name="ElementShortName">weight_write</obj_property>
+         <obj_property name="ObjectShortName">weight_write</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/MVU/weight_read">
+         <obj_property name="ElementShortName">weight_read</obj_property>
+         <obj_property name="ObjectShortName">weight_read</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/MVU/bias_write">
+         <obj_property name="ElementShortName">bias_write</obj_property>
+         <obj_property name="ObjectShortName">bias_write</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/MVU/bias_read">
+         <obj_property name="ElementShortName">bias_read</obj_property>
+         <obj_property name="ObjectShortName">bias_read</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/MVU/scaler_write">
+         <obj_property name="ElementShortName">scaler_write</obj_property>
+         <obj_property name="ObjectShortName">scaler_write</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/MVU/scaler_read">
+         <obj_property name="ElementShortName">scaler_read</obj_property>
+         <obj_property name="ObjectShortName">scaler_read</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/MVU/active">
+         <obj_property name="ElementShortName">active</obj_property>
+         <obj_property name="ObjectShortName">active</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/MVU/write_en">
+         <obj_property name="ElementShortName">write_en</obj_property>
+         <obj_property name="ObjectShortName">write_en</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/MVU/read_en">
+         <obj_property name="ElementShortName">read_en</obj_property>
+         <obj_property name="ObjectShortName">read_en</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/rHADDR">
+         <obj_property name="ElementShortName">rHADDR</obj_property>
+         <obj_property name="ObjectShortName">rHADDR</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/rHADDR.reg_type">
+            <obj_property name="ElementShortName">.reg_type[3:0]</obj_property>
+            <obj_property name="ObjectShortName">.reg_type[3:0]</obj_property>
+            <obj_property name="Radix">HEXRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/rHADDR.mvu_id">
+            <obj_property name="ElementShortName">.mvu_id[3:0]</obj_property>
+            <obj_property name="ObjectShortName">.mvu_id[3:0]</obj_property>
+            <obj_property name="Radix">HEXRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/rHADDR.reserved_1">
+            <obj_property name="ElementShortName">.reserved_1[1:0]</obj_property>
+            <obj_property name="ObjectShortName">.reserved_1[1:0]</obj_property>
+            <obj_property name="Radix">HEXRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/rHADDR.addr">
+            <obj_property name="ElementShortName">.addr[15:0]</obj_property>
+            <obj_property name="ObjectShortName">.addr[15:0]</obj_property>
+            <obj_property name="Radix">HEXRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/rHADDR.byte_sel">
+            <obj_property name="ElementShortName">.byte_sel[1:0]</obj_property>
+            <obj_property name="ObjectShortName">.byte_sel[1:0]</obj_property>
+            <obj_property name="Radix">HEXRADIX</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/rHSIZE">
+         <obj_property name="ElementShortName">rHSIZE[2:0]</obj_property>
+         <obj_property name="ObjectShortName">rHSIZE[2:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/MVU/rHWRITE">
+         <obj_property name="ElementShortName">rHWRITE</obj_property>
+         <obj_property name="ObjectShortName">rHWRITE</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/irq">
+      <obj_property name="ElementShortName">irq[7:0]</obj_property>
+      <obj_property name="ObjectShortName">irq[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_toplevel/dut/MVU/mvu/irq">
+      <obj_property name="ElementShortName">irq[7:0]</obj_property>
+      <obj_property name="ObjectShortName">irq[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/TB_toplevel/dut/IRQ">
+      <obj_property name="ElementShortName">IRQ[14:0]</obj_property>
+      <obj_property name="ObjectShortName">IRQ[14:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_toplevel/dut/cpu/HCLK">
+      <obj_property name="ElementShortName">HCLK</obj_property>
+      <obj_property name="ObjectShortName">HCLK</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_toplevel/dut/cpu/HRESETn">
+      <obj_property name="ElementShortName">HRESETn</obj_property>
+      <obj_property name="ObjectShortName">HRESETn</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_toplevel/dut/cpu/NMI">
+      <obj_property name="ElementShortName">NMI</obj_property>
+      <obj_property name="ObjectShortName">NMI</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/TB_toplevel/dut/cpu/EXT_IRQ">
+      <obj_property name="ElementShortName">EXT_IRQ</obj_property>
+      <obj_property name="ObjectShortName">EXT_IRQ</obj_property>
+   </wvobject>
+   <wvobject type="group" fp_name="group421">
+      <obj_property name="label">IBEX WRAPPER</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/cpu/IRQ">
+         <obj_property name="ElementShortName">IRQ[14:0]</obj_property>
+         <obj_property name="ObjectShortName">IRQ[14:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/cpu/SYSTICKCLKDIV">
+         <obj_property name="ElementShortName">SYSTICKCLKDIV[23:0]</obj_property>
+         <obj_property name="ObjectShortName">SYSTICKCLKDIV[23:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/cpu/core_sleep_o">
+         <obj_property name="ElementShortName">core_sleep_o</obj_property>
+         <obj_property name="ObjectShortName">core_sleep_o</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/cpu/alert_minor_o">
+         <obj_property name="ElementShortName">alert_minor_o</obj_property>
+         <obj_property name="ObjectShortName">alert_minor_o</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/cpu/alert_major_o">
+         <obj_property name="ElementShortName">alert_major_o</obj_property>
+         <obj_property name="ObjectShortName">alert_major_o</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/cpu/data_hsize">
+         <obj_property name="ElementShortName">data_hsize[2:0]</obj_property>
+         <obj_property name="ObjectShortName">data_hsize[2:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/cpu/data_addr_off">
+         <obj_property name="ElementShortName">data_addr_off[1:0]</obj_property>
+         <obj_property name="ObjectShortName">data_addr_off[1:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/cpu/instr_rvalid_i">
+         <obj_property name="ElementShortName">instr_rvalid_i</obj_property>
+         <obj_property name="ObjectShortName">instr_rvalid_i</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/cpu/data_be_o">
+         <obj_property name="ElementShortName">data_be_o[3:0]</obj_property>
+         <obj_property name="ObjectShortName">data_be_o[3:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/cpu/data_addr_o">
+         <obj_property name="ElementShortName">data_addr_o[31:0]</obj_property>
+         <obj_property name="ObjectShortName">data_addr_o[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/cpu/data_rvalid_i">
+         <obj_property name="ElementShortName">data_rvalid_i</obj_property>
+         <obj_property name="ObjectShortName">data_rvalid_i</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/cpu/data_req_o">
+         <obj_property name="ElementShortName">data_req_o</obj_property>
+         <obj_property name="ObjectShortName">data_req_o</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/cpu/data_gnt_i">
+         <obj_property name="ElementShortName">data_gnt_i</obj_property>
+         <obj_property name="ObjectShortName">data_gnt_i</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/cpu/data_we_o">
+         <obj_property name="ElementShortName">data_we_o</obj_property>
+         <obj_property name="ObjectShortName">data_we_o</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/cpu/div">
+         <obj_property name="ElementShortName">div</obj_property>
+         <obj_property name="ObjectShortName">div</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/cpu/clkdiv">
+         <obj_property name="ElementShortName">clkdiv[23:0]</obj_property>
+         <obj_property name="ObjectShortName">clkdiv[23:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/cpu/systickclk">
+         <obj_property name="ElementShortName">systickclk</obj_property>
+         <obj_property name="ObjectShortName">systickclk</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/cpu/state">
+         <obj_property name="ElementShortName">state[4:0]</obj_property>
+         <obj_property name="ObjectShortName">state[4:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/cpu/nstate">
+         <obj_property name="ElementShortName">nstate[4:0]</obj_property>
+         <obj_property name="ObjectShortName">nstate[4:0]</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>

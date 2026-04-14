@@ -1,0 +1,2 @@
+-f $SOCROOT/rtl/filelist
+$SOCROOT/verif/tests/mvu_smoke/TB_toplevel.sv
