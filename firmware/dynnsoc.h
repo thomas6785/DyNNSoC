@@ -14,11 +14,13 @@
 #define CHK_BIT(reg, bit) ((reg) &   (1u << (bit)))
 
 // Define base addresses for each peripheral
-#define ROM_BASE        0x00000000u
-#define RAM_BASE        0x01000000u
-#define GPIO_BASE       0x02000000u
-#define UART_BASE       0x03000000u
-#define MVU_DATA_BASE   0x10000000u
+#define ROM_BASE         0x00000000u
+#define RAM_BASE         0x01000000u
+#define GPIO_BASE        0x02000000u
+#define UART_BASE        0x03000000u
+#define DMAC_BASE        0x04000000u
+
+#define MVU_DATA_BASE    0x10000000u
 
 #define MVU_WEIGHTS_BASE 0x11000000u
 #define MVU_BIAS_BASE    0x12000000u
@@ -154,7 +156,22 @@ static inline void uart_puts(const char *s) {
         uart_putc(*s++);
 }
 
+// ------------------------------------------------------------------
+// DMAC Helpers
+// ------------------------------------------------------------------
+typedef struct {
+    uint32_t src_addr;
+    uint32_t dst_addr;
+    uint32_t length; // in bytes
+    uint32_t control;
+} dmac_config_t;
+
+#define DMAC_CONFIG ((volatile dmac_config_t *)(DMAC_BASE))
+
+// ------------------------------------------------------------------
 // MVU helpers
+// ------------------------------------------------------------------
+
 static inline void mvu_write_data(uint32_t offset, uint32_t val) {
     REG32(MVU_DATA_BASE + offset) = val;
 }

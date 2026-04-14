@@ -60,11 +60,17 @@ module ahb_dma #(
     );
 
     always_ff @ (posedge HCLK) begin
+        if (!HRESETn)                                           irq_flag <= 1'b0; // clear IRQ on reset
+        else if (irq_pulse)                                     irq_flag <= 1'b1; // set the flag when an IRQ pulse is received from the DMAC
+        else if (reg_write && reg_access[3] && reg_wdata[0])    irq_flag <= 1'b0; // clear the flag when the core writes to the appropriate register (currently reg 3 bit 0)
+        else                                                    irq_flag <= irq_flag; // otherwise maintain the current value
+    end
+
+    always_ff @ (posedge HCLK) begin
         if (!HRESETn) begin
             config_in_src_addr <= '0;
             config_in_dest_addr <= '0;
             config_in_transfer_size <= '0;
-            irq_flag <= 1'b0;
         end else if (reg_write) begin
             if (reg_access[0]) begin
                 config_in_src_addr <= reg_wdata;
@@ -72,12 +78,10 @@ module ahb_dma #(
                 config_in_dest_addr <= reg_wdata;
             end else if (reg_access[2]) begin
                 config_in_transfer_size <= reg_wdata[15:0]; // upper bits are ignored
-            end else if (reg_access[3]) begin
-                irq_flag <= irq_flag & ~reg_wdata[0]; // write to clear the IRQ flag
             end
-        end else begin
-            irq_flag <= irq_flag | irq_pulse; // sticky flag logic
-            // TODO known issue: if we happen to write to ANOTHER config register just as the IR pulse arrives, this alway_ff block won't capture the IRQ pulse. This is very unlikely to happen
+            // no write logic for register 3
+            // bit 0 is used to clear the IRQ (handled in the always block for the IRQ flag)
+            // bit 31 is used to start (combinational, handled by the assign statement for start_signal)
         end
     end
     assign start_signal = reg_wdata[31] && reg_write && reg_access[3];
@@ -85,7 +89,7 @@ module ahb_dma #(
     assign reg_rdata[0] = config_in_src_addr;
     assign reg_rdata[1] = config_in_dest_addr;
     assign reg_rdata[2] = {16'b0, config_in_transfer_size};
-    assign reg_rdata[3] = {31'b0,irq_flag};
+    assign reg_rdata[3] = {31'b0, irq_flag};
 
     assign reg_ready = 1'b1;
     assign reg_error = 1'b0; // TODO write these better

@@ -181,4 +181,7 @@ module dmac #(
 
     // IRQ generation logic
     assign irq = (current_state == FINAL_DEST_DATA) && dma_bus.HREADY;
+
+    assign dma_bus.HPROT = 4'b0011;
+    assign dma_bus.HSIZE = 3'b010;
 endmodule

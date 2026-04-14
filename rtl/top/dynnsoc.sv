@@ -41,11 +41,12 @@ module dynnsoc (
     // Declare interrupt request lines
     // ========================================
     logic       IRQ_uart;
+    logic       DMAC_irq;
     logic [7:0] mvu_irqs;
 
     wire [14:0] IRQ; // interrupt request vector to the core. Should remain high until addressed
     assign IRQ = {
-        mvu_irqs, 5'b0, IRQ_uart, 1'b0
+        mvu_irqs, 4'b0, DMAC_irq, IRQ_uart, 1'b0
     };
 
     // ========================================
@@ -70,22 +71,8 @@ module dynnsoc (
     assign JA = {HCLK, ahb_arbitrated_if.HTRANS[1], ahb_arbitrated_if.HREADY, ahb_arbitrated_if.HWRITE, '0};
 
     // ========================================
-    // Temporarily drive DMAC for testing
-    // ========================================
-    assign ahb_dmac_m_if.HTRANS = 2'b10; // constantly driving stuff
-    assign ahb_dmac_m_if.HWRITE = 1'b0;
-    assign ahb_dmac_m_if.HWDATA = 32'b0;
-    assign ahb_dmac_m_if.HPROT = 4'b00011;
-    assign ahb_dmac_m_if.HSIZE = 3'b010;
-    always_ff @ (posedge HCLK) begin
-        if (!HRESETn) ahb_dmac_m_if.HADDR <= 32'h0;
-        else if (ahb_dmac_m_if.HREADY) ahb_dmac_m_if.HADDR <= ahb_dmac_m_if.HADDR ^ 32'h4; // alternate between 0 and 4
-    end
-
-    // ========================================
     // Create arbiter for DMAC and CPU to share the AHB bus
     // ========================================
-
     ahb_transparent_arbiter arbiter ( // TODO create forbidden addresses
         .HCLK(HCLK),
         .HRESETn(HRESETn),
@@ -153,19 +140,26 @@ module dynnsoc (
         .slave_if_s1 (ahb_ram_if.interconn),
         .slave_if_s2 (ahb_gpio_if.interconn),
         .slave_if_s3 (ahb_uart_if.interconn),
-        .slave_if_s4 (ahb_mvu_if.interconn)
+        .slave_if_s4 (ahb_mvu_if.interconn),
+        .slave_if_s5 (ahb_dmac_s_if.interconn)
     );
 
     // ========================================
     // DMA Controller
     // ========================================
     // Both a master and a slave on the AHB bus
-    //ahb_dmac DMAC (
-    //    .HCLK,
-    //    .HRESETn,
-    //    .master_if(ahb_dmac_m_if.master),   // DMAC master interface to arbiter
-    //    .config_if(ahb_dmac_s_if.slave)     // DMAC slave interface from interconnect
-    //);
+    ahb_dma #(
+        .BAD_ADDR_SPACE_VALUE(32'h0400_0000),
+        .BAD_ADDR_SPACE_MASK (32'hFF00_0000)
+        // addresses in the range 0x0400_0000 to 0x04FF_FFFF are the DMAC's own configuration,
+        // so it is forbidden from accessing them
+    ) DMAC (
+        .HCLK,
+        .HRESETn,
+        .master_if(ahb_dmac_m_if.master),   // DMAC master interface to arbiter
+        .config_if(ahb_dmac_s_if.slave),    // DMAC slave interface from interconnect
+        .irq_flag(DMAC_irq)
+    );
 
     // ========================================
     // MVU array

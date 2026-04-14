@@ -13,20 +13,21 @@ $SOCROOT/rtl/ahb_infra/ahb_decoder.sv
 $SOCROOT/rtl/ahb_infra/ahb_mux.v
 $SOCROOT/rtl/ahb_infra/ahb_dummy.v
 $SOCROOT/rtl/ahb_infra/ahb_transparent_arbiter.sv
+$SOCROOT/rtl/ahb_infra/ahb_to_csr.sv
 
 # Small simple slaves
 $SOCROOT/rtl/slaves/ahb_gpio.sv
 $SOCROOT/rtl/slaves/ahb_ram.sv
 $SOCROOT/rtl/slaves/imem.sv
 
+# DMA Controller
+$SOCROOT/rtl/dma/ahb_dma.sv
+$SOCROOT/rtl/dma/dmac.sv
+
 # UART
 $SOCROOT/rtl/slaves/uart/uart.v
 $SOCROOT/rtl/slaves/uart/uart_RXonly.v
 $SOCROOT/rtl/slaves/uart/ahb_uart.v
-
-# Cortex core files (flattened)
-# $SOCROOT/rtl/cortex_m0/CORTEXM0DS.v
-# $SOCROOT/rtl/cortex_m0/cortexm0ds_logic.v
 
 # MVU files
 # -f $SOCROOT/ip/MVU/filelist

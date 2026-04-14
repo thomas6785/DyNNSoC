@@ -22,6 +22,7 @@ module ahb_decoder (
             32'h02_??_??_??: MUX_SEL = 4'h2; // Slave 2
             32'h03_??_??_??: MUX_SEL = 4'h3; // Slave 3
             32'h1?_??_??_??: MUX_SEL = 4'h4; // Slave 4
+            32'h04_??_??_??: MUX_SEL = 4'h5; // Slave 5
             default: MUX_SEL = 4'hF; // Invalid address
         endcase
     end
