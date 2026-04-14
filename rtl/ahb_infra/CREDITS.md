@@ -1,7 +1,6 @@
 CREDITS FOR AHB DESIGNS:
 
 Arm designs:
-    ahb_decoder.sv an Arm design
     ahb_mux.sv an Arm design
 
 Prof. Brian Mulkeen (from Digital & Embedded Systems, UCD):
@@ -9,6 +8,7 @@ Prof. Brian Mulkeen (from Digital & Embedded Systems, UCD):
 
 By Thomas O'Dea:
     ahb_intf.sv
+    ahb_decoder.sv
     ahb_1to1_interconnect.sv
 
 By Thomas O'Dea with AI assistance:
