@@ -15,8 +15,8 @@ ENTRY(_start)
 MEMORY
 {
     ROM (rx)  : ORIGIN = 0x00000000, LENGTH = 32K
-    RAM (rw)  : ORIGIN = 0x20000000, LENGTH = 12K
-    stack (rw): ORIGIN = 0x20000000 + 12K, LENGTH = 4K
+    RAM (rw)  : ORIGIN = 0x01000000, LENGTH = 12K
+    stack (rw): ORIGIN = 0x01000000 + 12K, LENGTH = 4K
 }
 
 PROVIDE(_fstack = ORIGIN(stack) + LENGTH(stack) - 4);
@@ -41,11 +41,27 @@ SECTIONS
 
     __data_load__ = LOADADDR(.data);
 
+    .sdata : ALIGN(4) {
+        __sdata_start__ = .;
+        *(.sdata*)
+        . = ALIGN(4);
+        __sdata_end__ = .;
+    } > RAM AT > ROM
+
+    __sdata_load__ = LOADADDR(.sdata);
+
     .bss (NOLOAD) : ALIGN(4) {
         __bss_start__ = .;
         *(.bss*)
         *(COMMON)
         . = ALIGN(4);
         __bss_end__ = .;
+    } > RAM
+
+    .sbss (NOLOAD) : ALIGN(4) {
+        __sbss_start__ = .;
+        *(.sbss*)
+        . = ALIGN(4);
+        __sbss_end__ = .;
     } > RAM
 }

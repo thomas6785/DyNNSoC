@@ -113,6 +113,7 @@ _reset:
     lui  sp, %hi(_fstack)
     addi sp, sp, %lo(_fstack)
 
+
     /* Copy .data from ROM (LMA) to RAM (VMA) */
     la a0, __data_load__
     la a1, __data_start__
@@ -126,6 +127,20 @@ _reset:
     blt a1, a2, .Ldata_loop
 .Ldata_done:
 
+    /* Copy .sdata from ROM (LMA) to RAM (VMA) */
+    la a0, __sdata_load__
+    la a1, __sdata_start__
+    la a2, __sdata_end__
+    bge a1, a2, .Lsdata_done
+.Lsdata_loop:
+    lw a3, 0(a0)
+    sw a3, 0(a1)
+    addi a0, a0, 4
+    addi a1, a1, 4
+    blt a1, a2, .Lsdata_loop
+.Lsdata_done:
+
+
     /* Clear .bss */
     la a0, __bss_start__
     la a1, __bss_end__
@@ -135,6 +150,16 @@ _reset:
     addi a0, a0, 4
     blt a0, a1, .Lbss_loop
 .Lbss_done:
+
+    /* Clear .sbss */
+    la a0, __sbss_start__
+    la a1, __sbss_end__
+    bge a0, a1, .Lsbss_done
+.Lsbss_loop:
+    sw zero, 0(a0)
+    addi a0, a0, 4
+    blt a0, a1, .Lsbss_loop
+.Lsbss_done:
 
     /* Call main */
     jal main
