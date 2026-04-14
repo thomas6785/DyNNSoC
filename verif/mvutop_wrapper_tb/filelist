@@ -1,0 +1,2 @@
+-f $SOCROOT/ip/MVU/filelist
+$SOCROOT/verif/mvutop_wrapper_tb/tb.sv

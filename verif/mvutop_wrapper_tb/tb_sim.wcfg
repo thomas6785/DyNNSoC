@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_sim.wdb" id="1">
+         <top_modules>
+            <top_module name="mvu_pkg" />
+            <top_module name="mvutop_wrapper_tb" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="2,380.977 ns"></ZoomStartTime>
+      <ZoomEndTime time="2,555.578 ns"></ZoomEndTime>
+      <Cursor1Time time="2,530.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="242"></NameColumnWidth>
+      <ValueColumnWidth column_width="151"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="7" />
+   <wvobject type="group" fp_name="group14">
+      <obj_property name="label">AHB IF</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="logic" fp_name="/mvutop_wrapper_tb/ahb_if/HWRITE">
+         <obj_property name="ElementShortName">HWRITE</obj_property>
+         <obj_property name="ObjectShortName">HWRITE</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/mvutop_wrapper_tb/ahb_if/HSEL">
+         <obj_property name="ElementShortName">HSEL</obj_property>
+         <obj_property name="ObjectShortName">HSEL</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/mvutop_wrapper_tb/ahb_if/HSIZE">
+         <obj_property name="ElementShortName">HSIZE[2:0]</obj_property>
+         <obj_property name="ObjectShortName">HSIZE[2:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/mvutop_wrapper_tb/ahb_if/HTRANS">
+         <obj_property name="ElementShortName">HTRANS[1:0]</obj_property>
+         <obj_property name="ObjectShortName">HTRANS[1:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/mvutop_wrapper_tb/ahb_if/HADDR">
+         <obj_property name="ElementShortName">HADDR[31:0]</obj_property>
+         <obj_property name="ObjectShortName">HADDR[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/mvutop_wrapper_tb/ahb_if/HPROT">
+         <obj_property name="ElementShortName">HPROT[3:0]</obj_property>
+         <obj_property name="ObjectShortName">HPROT[3:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/mvutop_wrapper_tb/ahb_if/HREADYOUT">
+         <obj_property name="ElementShortName">HREADYOUT</obj_property>
+         <obj_property name="ObjectShortName">HREADYOUT</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/mvutop_wrapper_tb/ahb_if/HWDATA">
+         <obj_property name="ElementShortName">HWDATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">HWDATA[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/mvutop_wrapper_tb/ahb_if/HRESP">
+         <obj_property name="ElementShortName">HRESP</obj_property>
+         <obj_property name="ObjectShortName">HRESP</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/mvutop_wrapper_tb/ahb_if/HREADY">
+         <obj_property name="ElementShortName">HREADY</obj_property>
+         <obj_property name="ObjectShortName">HREADY</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/mvutop_wrapper_tb/ahb_if/HRDATA">
+         <obj_property name="ElementShortName">HRDATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">HRDATA[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/mvutop_wrapper_tb/ahb_if/ADDR_WIDTH">
+         <obj_property name="ElementShortName">ADDR_WIDTH[31:0]</obj_property>
+         <obj_property name="ObjectShortName">ADDR_WIDTH[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/mvutop_wrapper_tb/ahb_if/DATA_WIDTH">
+         <obj_property name="ElementShortName">DATA_WIDTH[31:0]</obj_property>
+         <obj_property name="ObjectShortName">DATA_WIDTH[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="array" fp_name="/mvutop_wrapper_tb/dut/mvu_ext_if/rdc_en">
+      <obj_property name="ElementShortName">rdc_en[7:0]</obj_property>
+      <obj_property name="ObjectShortName">rdc_en[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/mvutop_wrapper_tb/dut/mvu_ext_if/rdc_grnt">
+      <obj_property name="ElementShortName">rdc_grnt[7:0]</obj_property>
+      <obj_property name="ObjectShortName">rdc_grnt[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/mvutop_wrapper_tb/dut/mvu_ext_if/rdc_addr">
+      <obj_property name="ElementShortName">rdc_addr[7:0][14:0]</obj_property>
+      <obj_property name="ObjectShortName">rdc_addr[7:0][14:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/mvutop_wrapper_tb/dut/mvu_ext_if/rdc_word">
+      <obj_property name="ElementShortName">rdc_word[7:0][63:0]</obj_property>
+      <obj_property name="ObjectShortName">rdc_word[7:0][63:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/mvutop_wrapper_tb/HCLK">
+      <obj_property name="ElementShortName">HCLK</obj_property>
+      <obj_property name="ObjectShortName">HCLK</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/mvutop_wrapper_tb/HRESETn">
+      <obj_property name="ElementShortName">HRESETn</obj_property>
+      <obj_property name="ObjectShortName">HRESETn</obj_property>
+   </wvobject>
+</wave_config>
