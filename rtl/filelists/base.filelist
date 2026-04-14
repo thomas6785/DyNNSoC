@@ -1,3 +1,5 @@
+# Files common to the 'lite' and 'full' filelist go here
+
 # Utilities for the SoC top
 $SOCROOT/rtl/utils/interfaces.sv
 $SOCROOT/rtl/utils/reset_gen.v
@@ -28,11 +30,6 @@ $SOCROOT/rtl/dma/dmac.sv
 $SOCROOT/rtl/slaves/uart/uart.v
 $SOCROOT/rtl/slaves/uart/uart_RXonly.v
 $SOCROOT/rtl/slaves/uart/ahb_uart.v
-
-# MVU files
-# -f $SOCROOT/ip/MVU/filelist
-# $SOCROOT/rtl/top/mvutop_wrapper.sv
-$SOCROOT/rtl/stubs/mvutop_wrapper_STUB.sv
 
 # Ibex files
 -f $SOCROOT/ip/ibex/filelist

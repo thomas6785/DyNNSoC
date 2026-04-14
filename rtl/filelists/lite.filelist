@@ -1,0 +1,4 @@
+-f $SOCROOT/rtl/filelists/base.filelist
+
+# For lite, use the MVU stub, since its very large
+$SOCROOT/rtl/stubs/mvutop_wrapper_STUB.sv

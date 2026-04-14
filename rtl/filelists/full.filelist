@@ -1,0 +1,5 @@
+-f $SOCROOT/rtl/filelists/base.filelist
+
+# For full, include the MVU
+-f $SOCROOT/ip/MVU/filelist
+$SOCROOT/rtl/top/mvutop_wrapper.sv
