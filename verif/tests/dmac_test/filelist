@@ -1,0 +1,2 @@
+-f $SOCROOT/rtl/filelist
+$SOCROOT/verif/tests/dmac_test/TB_toplevel.sv
