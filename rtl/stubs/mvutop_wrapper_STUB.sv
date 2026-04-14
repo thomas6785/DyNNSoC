@@ -3,7 +3,7 @@
 module mvutop_wrapper (
     input logic HCLK,
     input logic HRESETn,
-    output logic irq_flag,
+    output logic [7:0] irq_flag,
     ahb_intf_s.slave AHB_IF
 );
     always @ (posedge HCLK) begin
