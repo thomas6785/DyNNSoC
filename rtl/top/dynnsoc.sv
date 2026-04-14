@@ -21,12 +21,20 @@ module dynnsoc (
     // ========================================
     // Interfaces for connecting components
     // ========================================
-    ahb_intf_m ahb_cpu_if();
-    ahb_intf_s ahb_imem_if();
-    ahb_intf_s ahb_ram_if();
-    ahb_intf_s ahb_gpio_if();
-    ahb_intf_s ahb_uart_if();
-    ahb_intf_s ahb_mvu_if();
+    // Masters on the AHB bus
+    ahb_intf_m ahb_cpu_if();            // The CPU has a master interface it drives (into the arbiter)
+    ahb_intf_m ahb_dmac_m_if();         // The DMAC has a master interface it drives (into the arbiter)
+    ahb_intf_m ahb_arbitrated_if();     // The arbiter drives this (MUX'd between the CPU and the DMAC)
+
+    // Slaves on the AHB bus
+    ahb_intf_s ahb_dmac_s_if();         // The DMAC is also a slave (so the CPU can configure it)
+    ahb_intf_s ahb_imem_if();           // Instruction memoy is a slave (read-only)
+    ahb_intf_s ahb_ram_if();            // General-purpose RAM is a slave (read/write)
+    ahb_intf_s ahb_gpio_if();           // GPIO is a slave (read/write)
+    ahb_intf_s ahb_uart_if();           // UART is a slave (read/write)
+    ahb_intf_s ahb_mvu_if();            // MVU is a slave (read/write)
+
+    // Instruction fetch backchannel
     instruction_fetch_if instr_if(); // connect CPU directly to imem, bypassing the AHB bus
 
     // ========================================
@@ -56,8 +64,38 @@ module dynnsoc (
 
     logic [15:0] gpio_out1;
 
-    // ======================== Signals for display on oscilloscope ===================
-    assign JA = {HCLK, ahb_cpu_if.HTRANS[1], ahb_cpu_if.HREADY, ahb_cpu_if.HRESP, '0};
+    // ========================================
+    // Signals to monitor on oscilloscope
+    // ========================================
+    assign JA = {HCLK, ahb_arbitrated_if.HTRANS[1], ahb_arbitrated_if.HREADY, ahb_arbitrated_if.HWRITE, '0};
+
+    // ========================================
+    // Temporarily drive DMAC for testing
+    // ========================================
+    assign ahb_dmac_m_if.HTRANS = 2'b10; // constantly driving stuff
+    assign ahb_dmac_m_if.HWRITE = 1'b0;
+    assign ahb_dmac_m_if.HWDATA = 32'b0;
+    assign ahb_dmac_m_if.HPROT = 4'b00011;
+    assign ahb_dmac_m_if.HSIZE = 3'b010;
+    always_ff @ (posedge HCLK) begin
+        if (!HRESETn) ahb_dmac_m_if.HADDR <= 32'h0;
+        else if (ahb_dmac_m_if.HREADY) ahb_dmac_m_if.HADDR <= ahb_dmac_m_if.HADDR ^ 32'h4; // alternate between 0 and 4
+    end
+
+    // ========================================
+    // Create arbiter for DMAC and CPU to share the AHB bus
+    // ========================================
+
+    ahb_transparent_arbiter arbiter ( // TODO create forbidden addresses
+        .HCLK(HCLK),
+        .HRESETn(HRESETn),
+        .ahb_if_m1(ahb_dmac_m_if.interconn),    // DMAC master interface into arbiter
+        .ahb_if_m2(ahb_cpu_if.interconn),       // CPU master interface into arbiter - this interface has priority (internally)
+        .ahb_if_mi(ahb_arbitrated_if.master)    // Output of arbiter to interconnect
+    );
+    // Note that this arbiter is "transparent" i.e. the masters have no awareness that they are sharing the bus
+    // The 'ready' signal will stall while the other master is using the bus, and there is no BUSREQ or BUSGNT signal
+    // They have no way of differentiating a SLAVE stalling them vs. another master
 
     // ========================================
     // Reset generator
@@ -110,13 +148,24 @@ module dynnsoc (
     ahb_interconn interconn (
         .HCLK,
         .HRESETn,
-        .master_if   (ahb_cpu_if.interconn),
+        .master_if   (ahb_arbitrated_if.interconn),
         .slave_if_s0 (ahb_imem_if.interconn),
         .slave_if_s1 (ahb_ram_if.interconn),
         .slave_if_s2 (ahb_gpio_if.interconn),
         .slave_if_s3 (ahb_uart_if.interconn),
         .slave_if_s4 (ahb_mvu_if.interconn)
     );
+
+    // ========================================
+    // DMA Controller
+    // ========================================
+    // Both a master and a slave on the AHB bus
+    //ahb_dmac DMAC (
+    //    .HCLK,
+    //    .HRESETn,
+    //    .master_if(ahb_dmac_m_if.master),   // DMAC master interface to arbiter
+    //    .config_if(ahb_dmac_s_if.slave)     // DMAC slave interface from interconnect
+    //);
 
     // ========================================
     // MVU array

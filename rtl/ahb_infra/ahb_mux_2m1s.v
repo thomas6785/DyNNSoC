@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 module ahb_mux_2m1s #(parameter SZ=32) (
 	input wire HCLK,
 	input wire HRESETn,
@@ -10,7 +11,7 @@ module ahb_mux_2m1s #(parameter SZ=32) (
 	input  wire [SZ-1:0]	HWDATA_M1,
 	output wire             HREADY_M1,
 	output wire [SZ-1:0]    HRDATA_M1,
-	
+
     // Port 2
 	input  wire [31:0] 	    HADDR_M2,
 	input  wire [1:0] 	    HTRANS_M2,
@@ -19,7 +20,7 @@ module ahb_mux_2m1s #(parameter SZ=32) (
 	input  wire [SZ-1:0]	HWDATA_M2,
 	output wire		        HREADY_M2,
 	output wire [SZ-1:0]	HRDATA_M2,
-	
+
     // Master Port
 	input  wire		        HREADY,
 	input  wire [SZ-1:0]	HRDATA,
@@ -29,7 +30,7 @@ module ahb_mux_2m1s #(parameter SZ=32) (
 	output wire [2:0] 	    HSIZE,
 	output wire [SZ-1:0]	HWDATA
 );
-	
+
 	localparam [4:0] S0 = 1;
 	localparam [4:0] S1 = 2;
 	localparam [4:0] S2 = 4;
@@ -52,10 +53,10 @@ module ahb_mux_2m1s #(parameter SZ=32) (
 
 	assign HREADY_M1 = (state == S0) ? 1'b1 : (state == S1) ? HREADY : ((state == S2) && (HTRANS_M2[1] == 1'b0)) ? HREADY : 1'b0;
 	assign HREADY_M2 = (state == S0) ? 1'b1 : (state == S2) ? HREADY : ((state == S1) && (HTRANS_M1[1] == 1'b0)) ? HREADY : 1'b0;
-	
+
 	assign HRDATA_M1 = HRDATA;
 	assign HRDATA_M2 = HRDATA;
-	
+
 	reg [1:0] htrans;
 	always @*
 		case (state)
@@ -64,7 +65,7 @@ module ahb_mux_2m1s #(parameter SZ=32) (
 			S2:     htrans = (HTRANS_M2[1]) ? HTRANS_M2 : HTRANS_M1;
             default:htrans = 2'b00;
 		endcase
-	
+
 	reg [31:0] haddr;
 	always @*
 		case (state)
@@ -73,7 +74,7 @@ module ahb_mux_2m1s #(parameter SZ=32) (
 			S2:     haddr = (HTRANS_M2[1]) ? HADDR_M2 : HADDR_M1;
             default:haddr = 32'b0;
 		endcase
-	
+
 	reg [0:0] hwrite;
 	always @*
 		case (state)
@@ -82,7 +83,7 @@ module ahb_mux_2m1s #(parameter SZ=32) (
 			S2:     hwrite = (HTRANS_M2[1]) ? HWRITE_M2 : HWRITE_M1;
             default:hwrite = 1'b0;
 		endcase
-		
+
 	reg [2:0] hsize;
 	always @*
 		case (state)
@@ -91,7 +92,7 @@ module ahb_mux_2m1s #(parameter SZ=32) (
 			S2:     hsize = (HTRANS_M2[1]) ? HSIZE_M2 : HSIZE_M1;
             default:hsize = 3'b0;
 		endcase
-			
+
 	reg [SZ-1:0] hwdata;
 	always @*
 		case (state)
@@ -100,11 +101,11 @@ module ahb_mux_2m1s #(parameter SZ=32) (
 			S2:     hwdata = HWDATA_M2;
             default:hwdata = 'b0;
 		endcase
-			
+
 	assign HTRANS   = htrans;
 	assign HADDR    = haddr;
 	assign HWDATA   = hwdata;
 	assign HSIZE    = hsize;
 	assign HWRITE   = hwrite;
-	
+
 endmodule
