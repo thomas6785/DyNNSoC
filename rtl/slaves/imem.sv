@@ -41,6 +41,7 @@ module imem (
     assign AHB_IF.HRESP = rWrite; // error if write was attempted
 
     // ROM loader signals
+    wire ROMload;
     wire [7:0] rxByte;
     wire newByte, wNow;
     wire [ADDR_WIDTH-3:0] wAddr;
