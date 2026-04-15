@@ -9,7 +9,8 @@
 
 
 
-# Anything beginning "gig_" is to be gitignored
+# Anything beginning "gig_" is to be gitignored by convention
 **/gig_*
 
 build/
+vivado/
