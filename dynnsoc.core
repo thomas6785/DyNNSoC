@@ -1,0 +1,75 @@
+CAPI=2:
+name: ::dynnsoc:0
+description: SoC with accelerator for dynamically-quantised neural networks
+
+filesets:
+    rtl_base:
+        file_type: systemVerilogSource
+        files:
+            # Utilities
+            - rtl/utils/interfaces.sv
+            - rtl/utils/reset_gen.v
+            - rtl/utils/status_ind.v
+            - rtl/utils/ram_loader.v
+            - rtl/utils/fifo.v
+            - rtl/utils/ram_2port.sv
+            - rtl/utils/ram_2port_true.sv
+            - rtl/utils/ram_2port_hetero.sv
+
+            # AHB infrastructure
+            - rtl/ahb_infra/ahb_mux.v
+            - rtl/ahb_infra/ahb_dummy.v
+            - rtl/ahb_infra/ahb_transparent_arbiter.sv
+            - rtl/ahb_infra/ahb_to_csr.sv
+            - rtl/ahb_infra/ahb_intf.sv
+
+            # Small, simple slaves
+            - rtl/slaves/ahb_gpio.sv
+            - rtl/slaves/ahb_ram.sv
+            - rtl/slaves/imem.sv
+
+            # DMA controller
+            - rtl/dma/ahb_dma.sv
+            - rtl/dma/dmac.sv
+
+            # UART
+            - rtl/slaves/uart/uart.v
+            - rtl/slaves/uart/uart_RXonly.v
+            - rtl/slaves/uart/ahb_uart.v
+
+            # Top-level SoC
+            - rtl/top/ahb_interconn.sv
+            - rtl/ahb_infra/ahb_decoder.sv
+            - rtl/top/ibex_wrapper.sv
+            - rtl/top/dynnsoc.sv
+
+        depend:
+            - lowrisc:ibex:ibex_core:0.1
+
+    # We may choose to include "rtl_full" or "rtl_lite" in addition to "rtl_base"
+    # this is useful for excluding the MVU when we are just testing the rest, since the MVU is very large and slows down simulation significantly
+    rtl_full:
+        file_type: systemVerilogSource
+        files:
+            - rtl/top/mvutop_wrapper.sv
+        depend:
+            - ::mvu:0
+
+    rtl_lite:
+        file_type: systemVerilogSource
+        files:
+            - rtl/stubs/mvutop_wrapper_STUB.sv
+
+targets:
+    synth:
+        filesets:
+            - rtl_base
+            - rtl_full
+        toplevel: dynnsoc
+
+        default_tool: vivado
+        tools:
+          vivado:
+            part: xczu9eg-ffvb1156-2-e
+            pnr: none
+            flatten_hierarchy: none

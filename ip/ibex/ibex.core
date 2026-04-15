@@ -37,6 +37,7 @@ filesets:
     files:
       - ibex_core.nangate.out.sdc:
           file_type: SDC
+
 targets:
   default: &default
     filesets:
