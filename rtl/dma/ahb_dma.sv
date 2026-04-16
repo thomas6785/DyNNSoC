@@ -90,6 +90,7 @@ module ahb_dma #(
     assign reg_rdata[1] = config_in_dest_addr;
     assign reg_rdata[2] = {16'b0, config_in_transfer_size};
     assign reg_rdata[3] = {31'b0, irq_flag};
+    // TODO status register should have a 'busy' and 'error' flag as well as the IRQ
 
     assign reg_ready = 1'b1;
     assign reg_error = 1'b0; // TODO write these better

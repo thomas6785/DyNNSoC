@@ -44,6 +44,7 @@ module dmac #(
     } state_t;
 
     logic error_flag, error_next;
+    // TODO error detection logic is present but doesn't actually do anything. It should terminate the transaction and send an IRQ
 
     logic [31:0] src_addr, src_addr_next, dest_addr, dest_addr_next;
     logic [31:0] data_buffer;
