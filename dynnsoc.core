@@ -77,3 +77,14 @@ targets:
             part: xczu9eg-ffvb1156-2-e
             pnr: none
             flatten_hierarchy: none
+
+    impl:
+        filesets:
+            - rtl_base
+            - rtl_full
+        toplevel: dynnsoc
+
+        default_tool: vivado
+        tools:
+          vivado:
+            part: xczu9eg-ffvb1156-2-e
