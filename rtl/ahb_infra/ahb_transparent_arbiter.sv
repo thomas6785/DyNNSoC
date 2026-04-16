@@ -97,10 +97,10 @@ module ahb_transparent_arbiter (
     logic [31:0] m1_hrdata_store, m2_hrdata_store;
     always_ff @ (posedge HCLK) begin
         if (!HRESETn) begin
-            ahb_if_m1.HRESP     <= '0;
-            ahb_if_m1.HRDATA    <= '0;
-            ahb_if_m2.HRESP     <= '0;
-            ahb_if_m2.HRDATA    <= '0;
+            m1_hresp_store     <= '0;
+            m1_hrdata_store    <= '0;
+            m2_hresp_store     <= '0;
+            m2_hrdata_store    <= '0;
         end else begin
             if (data_signals_owner == M1) begin
                 m1_hresp_store  <= ahb_if_mi.HRESP;
