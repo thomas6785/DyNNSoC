@@ -2,6 +2,10 @@ CAPI=2:
 name: ::dynnsoc:0
 description: SoC with accelerator for dynamically-quantised neural networks
 
+# This is a FuseSoC "core" file
+# It provides the necessary information for building, simulating, and synthesising the SoC design
+# It has dependencies on other core files which must be included in your FuseSoC library
+
 filesets:
     rtl_base:
         file_type: systemVerilogSource
