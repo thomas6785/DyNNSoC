@@ -35,7 +35,7 @@ void irq_handler_07(void) {
 }
 
 int main(void) {
-    test_mvu_data(  0xfff8,   0xCAFEBABE); // last legel address
+    test_mvu_data(  0x3fff8,   0xCAFEBABE); // last legal address
     irq_global_enable();
     irq_enable(0xFFFFFFFF); // enable IRQs
     gpio_write(0);
@@ -49,8 +49,8 @@ int main(void) {
     }
     GPIO_OUT1 = 0x1; // TODO remove this debug line
 
-    test_mvu_data(  0x3fff8,   0xCAFEBABE); // last legel address
-    test_mvu_data(  0x3fff0,   0xCAFEBABE); // last legel address
+    test_mvu_data(  0x3fff8,   0xCAFEBABE); // last legal address
+    test_mvu_data(  0x3fff0,   0xCAFEBABE); // last legal address
     GPIO_OUT1 = 0x2; // TODO remove this debug line
 
     for(i=0; i<36; i++) {
@@ -74,28 +74,28 @@ int main(void) {
     int input_data_addr = 0;
     int output_data_addr = 131072;
     GPIO_OUT1 = 0x5; // TODO remove this debug line
-    MVU_CSR(0) -> wlength_1    =  1-1               ;
-    MVU_CSR(0) -> wlength_2    =  1-1               ;
-    MVU_CSR(0) -> wlength_3    =  (weight_max_precision*input_data_max_precision-1               ); // need to stay here long enough to iterate over all partial products for bit serial computation
-    MVU_CSR(0) -> wlength_4    =  kernel_size-1                  ;
-    MVU_CSR(0) -> wjump_0      =  -(kernel_size-1)*weight_max_precision;
-    MVU_CSR(0) -> wjump_1      =  -(kernel_size-1)*weight_max_precision;
-    MVU_CSR(0) -> wjump_2      =  -(kernel_size-1)*weight_max_precision;
-    MVU_CSR(0) -> wjump_3      =  -(kernel_size-1)*weight_max_precision;
-    MVU_CSR(0) -> wjump_4      =  1*weight_max_precision;
-    MVU_CSR(0) -> ilength_1    =  input_data_side_length-kernel_side_length;
-    MVU_CSR(0) -> ilength_2    =  input_data_max_precision*weight_max_precision-1;
-    MVU_CSR(0) -> ilength_3    =  kernel_side_length-1;
-    MVU_CSR(0) -> ilength_4    =  kernel_side_length-1;
-    MVU_CSR(0) -> ijump_0      =  -input_data_max_precision*(kernel_side_length-1)*input_data_side_length-1;
-    MVU_CSR(0) -> ijump_1      =  -input_data_max_precision*((kernel_side_length-1)*input_data_side_length+1);
-    MVU_CSR(0) -> ijump_2      =  -input_data_max_precision*((kernel_side_length-1)*input_data_side_length+kernel_side_length-1);
-    MVU_CSR(0) -> ijump_3      =  input_data_max_precision*(input_data_side_length-kernel_side_length+1);
-    MVU_CSR(0) -> ijump_4      =  input_data_max_precision*1;
-    MVU_CSR(0) -> wbaseptr     =  weight_addr;
-    MVU_CSR(0) -> ibaseptr     =  input_data_addr;
-    MVU_CSR(0) -> obaseptr     =  output_data_addr;
-    MVU_CSR(0) -> omvusel      =  0xFF;
+    MVU_CSR(0) -> wlength_1     =  1-1               ;
+    MVU_CSR(0) -> wlength_2     =  1-1               ;
+    MVU_CSR(0) -> wlength_3     =  (weight_max_precision*input_data_max_precision-1               ); // need to stay here long enough to iterate over all partial products for bit serial computation
+    MVU_CSR(0) -> wlength_4     =  kernel_size-1                  ;
+    MVU_CSR(0) -> wjump_0       =  -(kernel_size-1)*weight_max_precision;
+    MVU_CSR(0) -> wjump_1       =  -(kernel_size-1)*weight_max_precision;
+    MVU_CSR(0) -> wjump_2       =  -(kernel_size-1)*weight_max_precision;
+    MVU_CSR(0) -> wjump_3       =  -(kernel_size-1)*weight_max_precision;
+    MVU_CSR(0) -> wjump_4       =  1*weight_max_precision;
+    MVU_CSR(0) -> ilength_1     =  input_data_side_length-kernel_side_length;
+    MVU_CSR(0) -> ilength_2     =  input_data_max_precision*weight_max_precision-1;
+    MVU_CSR(0) -> ilength_3     =  kernel_side_length-1;
+    MVU_CSR(0) -> ilength_4     =  kernel_side_length-1;
+    MVU_CSR(0) -> ijump_0       =  -input_data_max_precision*(kernel_side_length-1)*input_data_side_length-1;
+    MVU_CSR(0) -> ijump_1       =  -input_data_max_precision*((kernel_side_length-1)*input_data_side_length+1);
+    MVU_CSR(0) -> ijump_2       =  -input_data_max_precision*((kernel_side_length-1)*input_data_side_length+kernel_side_length-1);
+    MVU_CSR(0) -> ijump_3       =  input_data_max_precision*(input_data_side_length-kernel_side_length+1);
+    MVU_CSR(0) -> ijump_4       =  input_data_max_precision*1;
+    MVU_CSR(0) -> wbaseptr      =  weight_addr;
+    MVU_CSR(0) -> ibaseptr      =  input_data_addr;
+    MVU_CSR(0) -> obaseptr      =  output_data_addr;
+    MVU_CSR(0) -> omvusel       =  0xFF;
 
     // use 4 bits of weights, 2 bits of data, and output 4 bits of precision
     MVU_CSR(0) -> precision   = (4<<0)|(2<<6)|(4<<12);
