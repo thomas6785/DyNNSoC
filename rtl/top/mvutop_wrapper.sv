@@ -33,6 +33,7 @@ localparam REGTYPE_W = 4'b0001; // Weight
 localparam REGTYPE_B = 4'b0010; // Bias
 localparam REGTYPE_S = 4'b0011; // Scaler
 localparam REGTYPE_CSR = 4'b0100;
+// (using 4 bits is just to make it line up nicely in the memory map)
 
 typedef struct packed {
     logic [3:0]  reg_type;   // bits 27-24: 0 for data, 1 for weights, 2 for biases, 3 for scalers, 4 for CSR
@@ -240,20 +241,25 @@ always_ff @ (posedge HCLK) begin
     end
 end
 
+// TODO replace magic number below with parameters
+
 // Connect weights for writing
-assign mvu_ext_if.wrw_word = '{default: AHB_IF.HWDATA};         // write the same data to all MVUs
-assign mvu_ext_if.wrw_addr = '{default: rHADDR.addr};           // and write the same address on all MVUs
-assign mvu_ext_if.wrw_en   = (weight_write << rHADDR.mvu_id);   // but only ENABLE the chosen MVU
+assign mvu_ext_if.wrw_en   = (weight_write << rHADDR.mvu_id);   // only ENABLE the chosen MVU
+assign mvu_ext_if.wrw_word = {128{AHB_IF.HWDATA}};              // write the same data to every word in every MVU
+assign mvu_ext_if.wrw_addr = rHADDR.addr[15:7];                 // internally weight addresses are only 9 bits
+assign mvu_ext_if.wrw_be   = (4'b1111)<<(rHADDR.addr[6:0]*4);  // and use the lower bits of the address to generate byte enables for the chosen word
 
 // Connect bias for writing
-assign mvu_ext_if.wrb_word = AHB_IF.HWDATA;                     // write the same data to all MVUs
-assign mvu_ext_if.wrb_addr = rHADDR.addr;                       // and write the same address on all MVUs
 assign mvu_ext_if.wrb_en   = (bias_write << rHADDR.mvu_id);     // but only ENABLE the chosen MVU
+assign mvu_ext_if.wrb_word = {64{AHB_IF.HWDATA}};
+assign mvu_ext_if.wrb_addr = rHADDR.addr[11:6];
+assign mvu_ext_if.wrb_be   = (4'b1111)<<(rHADDR.addr[5:0]*4);  // and use the lower bits of the address to generate byte enables for the chosen word
 
 // Connect scaler for writing
-assign mvu_ext_if.wrs_word = AHB_IF.HWDATA;                     // write the same data to all MVUs
-assign mvu_ext_if.wrs_addr = rHADDR.addr;                       // and write the same address on all MVUs
 assign mvu_ext_if.wrs_en   = (scaler_write << rHADDR.mvu_id);   // but only ENABLE the chosen MVU
+assign mvu_ext_if.wrs_word = {32{AHB_IF.HWDATA}};
+assign mvu_ext_if.wrs_addr = rHADDR.addr[10:5];
+assign mvu_ext_if.wrs_be   = (4'b1111)<<(rHADDR.addr[4:0]*4);  // and use the lower bits of the address to generate byte enables for the chosen word
 
 // Connect data for writing
 assign mvu_ext_if.wrc_word = {32'b0, AHB_IF.HWDATA};            // write the same data to all MVUs
@@ -266,7 +272,7 @@ assign mvu_ext_if.wrc_en   = (data_write << rHADDR.mvu_id);     // but only ENAB
 // when writing, pad with zeros
 logic read_data_ready,write_data_ready;
 assign mvu_ext_if.rdc_en = (data_read << rHADDR.mvu_id);     // ENABLE the chosen MVU for reading
-assign mvu_ext_if.rdc_addr = '{default: rHADDR.addr[15:1]};  // read the same address on all MVUs
+assign mvu_ext_if.rdc_addr = rHADDR.addr[15:1];  // read the same address on all MVUs
 assign write_data_ready = mvu_ext_if.wrc_grnt[rHADDR.mvu_id]; // data is written when the chosen MVU grants the write
 
 // There is a two-cycle latency for data reads, so flop it here
