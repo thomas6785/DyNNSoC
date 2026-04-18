@@ -1,0 +1,22 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: DyNNSoC
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Thomas
+    family-names: O'Dea
+    email: thomaseodea@gmail.com
+    affiliation: University College Dublin
+repository-code: 'https://github.com/thomas6785/DyNNSoC'
+abstract: >-
+  DyNNSoC is an SoC which integrates a RISC-V core (Ibex)
+  with a modified version of the MVU presented by Bilaniuk,
+  Olexa et al. in "Bit-Slicing FPGA Accelerator for
+  Quantized Neural Networks". The SoC is focused on hardware
+  acceleration for dynamic precision (i.e. dynamic
+  quantisation) neural networks.
