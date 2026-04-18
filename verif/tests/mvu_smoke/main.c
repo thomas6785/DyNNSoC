@@ -9,6 +9,8 @@ void assert_equal(uint32_t a, uint32_t b) {
     }
 }
 
+// Write and then immediately read back MVU data
+// and assert that it matches
 void test_mvu_data(uint32_t offset, uint32_t val) {
     mvu_write_data(offset, val);
     //GPIO_OUT1 = offset; // write the offset to GPIOs so we can see in the waveform which address we are testing
@@ -19,7 +21,7 @@ void test_mvu_data(uint32_t offset, uint32_t val) {
 static uint32_t prng_state = 0x12345678; // just a random seed
 uint32_t prng(uint32_t feed) {
     // A very simple LFSR-based PRNG, just to generate some pseudo-random test data for the MVU tests
-    prng_state ^= feed; // mix in the feed value to make it less predictable
+    prng_state ^= feed; // mix in the feed value to make it less predictable (probably unnecessary)
     prng_state ^= (prng_state << 13);
     prng_state ^= (prng_state >> 17);
     prng_state ^= (prng_state << 5);
@@ -27,27 +29,58 @@ uint32_t prng(uint32_t feed) {
 }
 
 static volatile uint32_t waiting_for_interrupt = 0;
-void irq_handler_07(void) __attribute__((interrupt("machine")));
-void irq_handler_07(void) {
+void irq_handler_11(void) __attribute__((interrupt("machine")));
+void irq_handler_11(void) {
     GPIO_OUT1 = 0x00FF; // TODO remove this debug line
     waiting_for_interrupt = 0;
     MVU_CSR(0) -> status = 1; // clear interrupt (w1c)
 }
 
+// GPIO_OUT0 is monitored by the testbench:
+//    - values 0x900D ("good") signals a passing test
+//    - value 0x0BAD ("bad") will trigger a failed assertion in the TB
+//    - value 0xBEEF ends the test
+
+// GPIO_OUT1 is written to as crude debug tool - by inspecting its value in waveforms we can roughly estimate where in the program we are without having to consult the instructions and listing file
+
+#define NMVU 4
+// number of MVU's, parametrisable
+
 int main(void) {
-    test_mvu_data(  0x3fff8,   0xCAFEBABE); // last legal address
     irq_global_enable();
     irq_enable(0xFFFFFFFF); // enable IRQs
     gpio_write(0);
     GPIO_OUT1 = 0x0; // TODO remove this debug line
 
-    uint32_t i;
-    for(i=0; i<32; i++) {
-        volatile uint32_t val = 0x12345*i;
-        uint32_t addr_off = 8*i; // 8 because we can only write to addresses ending 000
-        test_mvu_data(addr_off, val);
-    }
+    prng(gpio_read_switches()); // seed the PRNG with the switches (we can randomise them in the TB)
+
     GPIO_OUT1 = 0x1; // TODO remove this debug line
+
+    // Write test data to each MVU
+    // then read it back and ensure it is as expected
+    uint32_t i,j;
+    for(j=0; j<NMVU; j++) { // for each MVU
+        // Test first and last addresses
+        GPIO_OUT1 = (1<<8) | (j<<4) | 0x0;
+        test_mvu_data((j<<20) | 0x0, prng(j)); // first legal address of each MVU
+        GPIO_OUT1 = (1<<8) | (j<<4) | 0x1;
+        assert_equal(mvu_read_data((j<<20) | 0x4), 0); // it's impossilbe to write to odd-numbered addresses (i.e. ending 100 instead of 000) so they should read zero
+
+        GPIO_OUT1 = (1<<8) | (j<<4) | 0x2;
+        test_mvu_data((j<<20) | 0x3fff8, prng(0)); // last legal address of each MVU
+        GPIO_OUT1 = (1<<8) | (j<<4) | 0x3;
+        assert_equal(mvu_read_data((j<<20) | 0x3fffc), 0); // it's impossilbe to write to odd-numbered addresses (i.e. ending 100 instead of 000) so they should read zero
+
+        GPIO_OUT1 = (1<<8) | (j<<4) | 0x4;
+        // Test some random addresses inbetween
+        for(i=0; i<10; i++) {
+            uint32_t random_addr = prng(j) & 0x3fff8;
+            test_mvu_data((j<<20) | (random_addr), prng(0));
+            assert_equal(mvu_read_data((j<<20) | (random_addr+4)), 0); // it's impossilbe to write to odd-numbered addresses (i.e. ending 100 instead of 000) so they should read zero
+        }
+    }
+
+    GPIO_OUT1 = 0x11; // TODO remove this debug line
 
     test_mvu_data(  0x3fff8,   0xCAFEBABE); // last legal address
     test_mvu_data(  0x3fff0,   0xCAFEBABE); // last legal address
