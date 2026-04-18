@@ -17,10 +17,10 @@ module imem (
     input wire HCLK,            // bus clock
     input wire HRESETn,         // bus reset, active low
 
-    // AHB slave interface - also read only
+    // AHB slave interface - read only
     ahb_intf_s.slave AHB_IF,
 
-    // Memory interface for core instruction fetches - read only
+    // Memory interface for core instruction fetches - also read only
     instruction_fetch_if.rom instr_if,
 
     // UART loader connections

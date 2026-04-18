@@ -29,6 +29,10 @@ module ahb_transparent_arbiter (
         else             data_signals_owner <= data_signals_owner_next;
     end
 
+    // TODO known issue: control_signals_owner should be latched to prevent the priority master from 'interrupting' the lower priority master
+    //                   AHB standard doesn't allow this, even if READY hasn't been given yet!
+    //                   in this case, because we are only using it for a DMA and simple peripherals, we see no bugs
+    //                   but this design is not robust!
     assign control_signals_owner   = m2_wants_bus ? M2 : m1_wants_bus ? M1 : FREE; // static priority scheme M2 > M1
     assign data_signals_owner_next = (ahb_if_mi.HREADY) ? control_signals_owner : data_signals_owner; // data owner follows control owner, but only when we are ready to move on
 
@@ -112,13 +116,11 @@ module ahb_transparent_arbiter (
         end
     end
 
-    always_comb begin
-        // If we currently own the data signals (HRDATA and HRESP), pass them through from the slave to the master
-        // If we don't currently own the data signals, retain the last values where this master did own them
-        // This means we have hidden a transaction from the master
-        ahb_if_m1.HRESP  = (data_signals_owner == M1) ? ahb_if_mi.HRESP  : m1_hresp_store;
-        ahb_if_m1.HRDATA = (data_signals_owner == M1) ? ahb_if_mi.HRDATA : m1_hrdata_store;
-        ahb_if_m2.HRESP  = (data_signals_owner == M2) ? ahb_if_mi.HRESP  : m2_hresp_store;
-        ahb_if_m2.HRDATA = (data_signals_owner == M2) ? ahb_if_mi.HRDATA : m2_hrdata_store;
-    end
+    // If we currently own the data signals (HRDATA and HRESP), pass them through from the slave to the master
+    // If we don't currently own the data signals, retain the last values where this master did own them
+    // This means we have hidden a transaction from the master
+    assign ahb_if_m1.HRESP  = (data_signals_owner == M1) ? ahb_if_mi.HRESP  : m1_hresp_store;
+    assign ahb_if_m1.HRDATA = (data_signals_owner == M1) ? ahb_if_mi.HRDATA : m1_hrdata_store;
+    assign ahb_if_m2.HRESP  = (data_signals_owner == M2) ? ahb_if_mi.HRESP  : m2_hresp_store;
+    assign ahb_if_m2.HRDATA = (data_signals_owner == M2) ? ahb_if_mi.HRDATA : m2_hrdata_store;
 endmodule

@@ -257,7 +257,7 @@ typedef struct {
     uint32_t olength_3;         // 0x0c0  Output loop length 3
     uint32_t olength_4;         // 0x0c4  Output loop length 4
     uint32_t precision;         // 0x0c8  Precision config
-    uint32_t status;            // 0x0cc  Status (read-only)
+    uint32_t status;            // 0x0cc  Status
     uint32_t command;           // 0x0d0  Command register
     uint32_t quant;             // 0x0d4  Quantisation
     uint32_t scaler;            // 0x0d8  Scaler value
