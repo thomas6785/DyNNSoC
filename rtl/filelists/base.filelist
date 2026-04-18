@@ -3,7 +3,6 @@
 # Utilities for the SoC top
 $SOCROOT/rtl/utils/interfaces.sv
 $SOCROOT/rtl/utils/reset_gen.v
-$SOCROOT/rtl/utils/status_ind.v
 $SOCROOT/rtl/utils/ram_loader.v
 $SOCROOT/rtl/utils/fifo.v
 $SOCROOT/rtl/utils/ram_2port.sv

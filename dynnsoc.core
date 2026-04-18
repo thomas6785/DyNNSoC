@@ -13,7 +13,6 @@ filesets:
             # Utilities
             - rtl/utils/interfaces.sv
             - rtl/utils/reset_gen.v
-            - rtl/utils/status_ind.v
             - rtl/utils/ram_loader.v
             - rtl/utils/fifo.v
             - rtl/utils/ram_2port.sv

@@ -1,23 +1,19 @@
 `timescale 1ns / 1ns
 
 module dynnsoc (
-    input HCLK,         // 50 MHz clock
-    input btnCpuResetn, // reset pushbutton, active low (marked CPU RESET)
-    input btnU,         // up button - if pressed after reset, ROM loader activated
-    input btnD,         // down button
-    input btnL,         // left button
-    input btnC,         // centre button
-    input btnR,         // right button
-    input [15:0] sw,    // 16 slide switches on Nexys 4 board
+    input HCLK,     // clock
+    input rst_n_in, // reset (active low)
+
+    // serial communications
     input serialRx,     // serial port receive line
-    output [15:0] led,  // 16 individual LEDs above slide switches
-    output [5:0] rgbLED,   // multi-colour LEDs {blu2, grn2, red2, blu1, grn1, red1}
-    output [7:0] JA,      // monitoring connector on FPGA board - use with oscilloscope
-    output serialTx       // serial port transmit line
-);  // end of module port list
+    output serialTx,    // serial port transmit line
 
-    localparam  OKAY = 1'b0, ERROR = 1'b1;  // values for the HRESP signal
-
+    // GPIO
+    output [15:0] gpio_out0,
+    output [15:0] gpio_out1,
+    input  [15:0] gpio_in0,
+    input  [15:0] gpio_in1
+);
     // ========================================
     // Interfaces for connecting components
     // ========================================
@@ -40,35 +36,27 @@ module dynnsoc (
     // ========================================
     // Declare interrupt request lines
     // ========================================
-    logic       IRQ_uart;
-    logic       DMAC_irq;
-    logic [7:0] mvu_irqs;
+    logic            IRQ_uart;
+    logic            DMAC_irq;
+    logic [3:0] mvu_irqs;
 
-    wire [14:0] IRQ; // interrupt request vector to the core. Should remain high until addressed
+    logic [14:0] IRQ; // interrupt request vector to the core. Should remain high until addressed
     assign IRQ = {
-        mvu_irqs, 4'b0, DMAC_irq, IRQ_uart, 1'b0
+        mvu_irqs,      // faster interrupts 14,13,12,11
+        8'b0,
+        DMAC_irq,      // fast interrupt 2
+        IRQ_uart,      // fast interrupt 1
+        1'b0
     };
 
     // ========================================
     // Declare some other connecting signals
     // ========================================
-    wire        HRESETn;            // active low bus reset
-    wire        resetHW;            // reset signal for hardware, active high TODO remove this an use a common reset for everything
-    wire        CPUsleep;           // CPU status signals
-    wire        ROMload;            // rom loader is active
-    wire [4:0]  buttons = {btnU, btnD, btnL, btnC, btnR};   // concatenate 5 pushbuttons
-
-    // Wires and multiplexer to drive LEDs from two different sources - needed for ROM loader
-    wire [11:0] led_rom;        // status output from ROM loader
-    wire [15:0] led_gpio;       // led output from GPIO block
-    assign led = ROMload ? {4'b0,led_rom} : led_gpio;    // choose which to display
-
-    logic [15:0] gpio_out1;
-
-    // ========================================
-    // Signals to monitor on oscilloscope
-    // ========================================
-    assign JA = {HCLK, ahb_arbitrated_if.HTRANS[1], ahb_arbitrated_if.HREADY, ahb_arbitrated_if.HWRITE, '0};
+    logic        HRESETn;            // active low bus reset
+    logic        CPUsleep;           // CPU status signals
+    logic        ROMload;            // rom loader is active
+    logic        rst_p;              // active-high reset
+    logic [11:0] rom_load_status;    // status output from ROM loader (e.g. for displaying on LEDs)
 
     // ========================================
     // Create arbiter for DMAC and CPU to share the AHB bus
@@ -87,27 +75,14 @@ module dynnsoc (
     // ========================================
     // Reset generator
     // ========================================
-    // Asserts hardware reset until the clock module is locked, also if reset button pressed.
-    // Asserts CPU and bus reset to meet Cortex-M0 requirements, also if ROM loader is active.
+    // Handles timing for reset de-asserting
+    // Also ensure reset is asserted while the ROM loader is active
     reset_gen resetGen (                // Instantiate reset generator module
-        .clk            (HCLK),         // works on system bus clock
-        .resetPBn       (btnCpuResetn), // signal from CPU reset pushbutton
-        .pll_lock       (1'b1),         // from clock management PLL
-        .loader_active  (ROMload),      // from ROM loader hardware
-        .cpu_request    (1'b0),         // from CPU, requesting reset
-        .resetHW        (resetHW),      // hardware reset output, active high
-        .resetCPUn      (HRESETn)       // CPU and bus reset, active low
-    );
-
-    // ========================================
-    // Status indicator
-    // ========================================
-    // Drives multi-colour LEDs to indicate status of processor and ROM loader.
-    status_ind statusInd (      // Instantiate status indicator module
-        .clk            (HCLK),       // works on system bus clock
-        .reset          (resetHW),    // hardware reset signal
-        .statusIn       ({~HRESETn, 1'b0, CPUsleep, ROMload}),  // status inputs
-        .rgbLED         (rgbLED)      // output signals for colour LEDs
+        .clk            (HCLK),         // input: system bus clock
+        .rst_n_async    (rst_n_in),     // input: external reset signal
+        .loader_active  (ROMload),      // input: ROM loader requesting reset
+        .rst_p          (rst_p),        // output: active high reset
+        .rst_n          (HRESETn)       // output: active low reset
     );
 
     // ========================================
@@ -132,6 +107,10 @@ module dynnsoc (
     // ========================================
     // AHB interconnect
     // ========================================
+    // Connects the interconnect master to all the slaves
+    // Handles multiplexing slave responses (read data, response code, ready signal)
+    // and driving select lines to each slave
+    // Detail of the memory map is inside this module
     ahb_interconn interconn (
         .HCLK,
         .HRESETn,
@@ -185,14 +164,14 @@ module dynnsoc (
     // ========================================
     ahb_gpio GPIO (
         // Bus signals
-        .HCLK,				                        // bus clock
-        .HRESETn,			                        // bus reset, active low
-        .AHB_IF         (ahb_gpio_if.slave),         // AHB slave interface
+        .HCLK,                                      // bus clock
+        .HRESETn,                                   // bus reset, active low
+        .AHB_IF         (ahb_gpio_if.slave),        // AHB slave interface
         // GPIO signals
-        .gpio_out0      (led_gpio),                 // read-write address 0
-        .gpio_out1      (gpio_out1),                // read-write address 4
-        .gpio_in0       (sw),                       // read only address 8
-        .gpio_in1       ({11'b0, buttons})          // read only address C
+        .gpio_out0,      // read-write address 0
+        .gpio_out1,      // read-write address 4
+        .gpio_in0,       // read-only address 8
+        .gpio_in1        // read-only address C
     );
 
     // ========================================
@@ -231,10 +210,10 @@ module dynnsoc (
         .instr_if       (instr_if.rom),      // Read-only memory interface for instruction fetches
 
         // Connections for ROM loader
-        .resetHW        (resetHW),			// hardware reset
-        .loadButton     (btnU),		        // pushbutton to activate loader
-        .serialRx	    (serialRx),         // serial input
-        .rom_load_status(led_rom),          // 12-bit word count for display on LEDs
-        .rom_load_active(ROMload)			// loader active
-    );
+        .resetHW        (rst_p),            // hardware reset
+        .loadButton     (btnU),             // pushbutton to activate loader
+        .serialRx       (serialRx),         // serial input
+        .rom_load_status(rom_load_status),  // 12-bit word count for display on LEDs
+        .rom_load_active(ROMload)           // loader active
+    ); // TODO might be a bug here with the reset signal - doesn't come up in test cases because we are writing to ROM directly. Need a UART test case TODO
 endmodule

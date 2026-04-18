@@ -6,20 +6,20 @@
 module TB_toplevel;
     int fail_count = 0;
 
-    logic btnCpuResetn, clk50, btnU;
-    logic [15:0] sw;    // switch inputs
-    wire [15:0] LED;
+    logic btnCpuResetn, clk50;
+    logic [15:0] gpio_in0, gpio_in1, gpio_out0, gpio_out1;
     logic serialRx;     // serial receive at idle
     wire serialTx;      // serial transmit
 
     dynnsoc dut(
         .HCLK(clk50),
-        .btnCpuResetn(btnCpuResetn),
-        .btnU(btnU),
+        .rst_n_in(btnCpuResetn),
         .serialRx(serialRx),
-        .sw(sw),
-        .led(LED),
-        .serialTx(serialTx)
+        .serialTx(serialTx),
+        .gpio_in0,
+        .gpio_out0,
+        .gpio_in1,
+        .gpio_out1
     );
 
     initial $readmemh("main.hex", dut.imem.bram.mem);  // load the program into ROM
@@ -33,10 +33,9 @@ module TB_toplevel;
     int i;
 
     initial begin
-        sw = 16'h5a4b;          // set a value on the switches
+        gpio_in0 = 16'h5a4b;    // set a value on the switches
         serialRx = 1'b1;        // serial line idle high
         btnCpuResetn = 1'b1;    // start with reset inactive
-        btnU = 1'b0;            // loader button not pressed
         #400;                 // wait for cpu and bus clock to be stable
 
         $display("ROM peek:"); // display 16 bytes of ROM to allow checking the correct firmware is loaded
@@ -56,8 +55,8 @@ module TB_toplevel;
             repeat(4) @(posedge clk50);  // hold IRQ high for a few cycles to make sure the core sees it
             release dut.IRQ;
             $display("          Released slave IRQ %d",i);
-            repeat(100) @(posedge clk50); // wait for the ISR to finish
-            assert_equal(LED,i, $sformatf("LED should indicate IRQ %d was handled", i));
+            repeat(250) @(posedge clk50); // wait for the ISR to finish
+            assert_equal(gpio_out0,i, $sformatf("gpio_out0 should indicate IRQ %d was handled", i));
         end
 
         repeat(1000) @(posedge clk50); // wait for some time to allow the program to run
@@ -72,13 +71,6 @@ module TB_toplevel;
 
         $stop;
     end
-
-    //initial begin
-    //    forever begin
-    //        @(posedge clk50);
-    //        $display("Time: %50t | imem raddr: %8h | imem rdata: %8h | LED: %2h", $time, dut.instr_if.addr, dut.instr_if.rdata, LED);
-    //    end
-    //end
 
     always @ (posedge dut.cpu.div) $display("          Systick IRQ triggered at time %t", $time);
 
