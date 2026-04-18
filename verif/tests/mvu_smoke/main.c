@@ -2,10 +2,10 @@
 
 void assert_equal(uint32_t a, uint32_t b) {
     if (a != b) {
-        gpio_write(0x0BAD); // if we fail an assertion, write DEAD to the GPIOs so testbench can detect it
+        gpio_write0(0x0BAD); // if we fail an assertion, write DEAD to the GPIOs so testbench can detect it
     } else {
-        gpio_write(0);
-        gpio_write(0x900D);
+        gpio_write0(0);
+        gpio_write0(0x900D);
     }
 }
 
@@ -49,10 +49,10 @@ void irq_handler_11(void) {
 int main(void) {
     irq_global_enable();
     irq_enable(0xFFFFFFFF); // enable IRQs
-    gpio_write(0);
+    gpio_write0(0);
     GPIO_OUT1 = 0x0; // TODO remove this debug line
 
-    prng(gpio_read_switches()); // seed the PRNG with the switches (we can randomise them in the TB)
+    prng(gpio_read0()); // seed the PRNG with the switches (we can randomise them in the TB)
 
     GPIO_OUT1 = 0x1; // TODO remove this debug line
 
@@ -149,5 +149,5 @@ int main(void) {
     }
     GPIO_OUT1 = 0x8; // TODO remove this debug line
 
-    gpio_write(0xBEEF); // BEEF means the test is over, testbench will recognise it and halt
+    gpio_write0(0xBEEF); // BEEF means the test is over, testbench will recognise it and halt
 }

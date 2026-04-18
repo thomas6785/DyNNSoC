@@ -3,7 +3,7 @@
 /* Create handlers for each interrupts that will simply write that interrupts ID to GPIO. Useful for testing the interrupts all work correctly */
 #define IRQ_HANDLER(name, id) \
     void name(void) __attribute__((interrupt("machine"))); \
-    void name(void) { gpio_write(id); }
+    void name(void) { gpio_write0(id); }
 
 IRQ_HANDLER(irq_handler_sw,      32)
 IRQ_HANDLER(irq_handler_systick, 64)
@@ -27,7 +27,7 @@ IRQ_HANDLER(irq_handler_nmi,    128)
 
 int main(void) {
     /* Write to GPIO initially */
-    gpio_write(0xFFFF);
+    gpio_write0(0xFFFF);
 
     irq_enable(0xFFFFFFFF); // enable all interrupts
     irq_global_enable(); // enable global interrupt enable

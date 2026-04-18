@@ -15,7 +15,7 @@ int main(void) {
     for (j = 0; j < 200; j++) {
         i++;
     };
-    gpio_write(i-200); // should be 0
+    gpio_write0(i-200); // should be 0
 
     // Test .rodata is accessible
     uint32_t sum = 0;
@@ -24,25 +24,25 @@ int main(void) {
     }
 
     /* If .rodata is accessible, sum == 150; write (sum - 150) which should be 0 */
-    gpio_write(sum - 150);
+    gpio_write0(sum - 150);
 
     // Test initialised variables have their initial values
-    gpio_write(init_var[0]-13);
-    gpio_write(init_var[1]-17);
-    gpio_write(init_var[2]-19);
-    gpio_write(init_var[3]-23);
-    gpio_write(init_var[4]-29);
+    gpio_write0(init_var[0]-13);
+    gpio_write0(init_var[1]-17);
+    gpio_write0(init_var[2]-19);
+    gpio_write0(init_var[3]-23);
+    gpio_write0(init_var[4]-29);
 
     // Test we can overwrite initialised variables with new values
     for (i = 0; i < 5; i++) {
         init_var[i] = i;
-        gpio_write(init_var[i]-i);
+        gpio_write0(init_var[i]-i);
     }
 
     // Test function calls (which also tests the stack is working)
     volatile int32_t a = 6, b = 7, c = - 3, d = 8; // need to declare these as volatile to prevent compiler from pre-computing
-    gpio_write(multiply(a,b) - 42);
-    gpio_write(multiply(c,d) + 24);
+    gpio_write0(multiply(a,b) - 42);
+    gpio_write0(multiply(c,d) + 24);
 
-    gpio_write(0xBEEF); // BEEF means the test is over
+    gpio_write0(0xBEEF); // BEEF means the test is over
 }

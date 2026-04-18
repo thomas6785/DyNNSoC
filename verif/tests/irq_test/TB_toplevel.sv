@@ -6,13 +6,13 @@
 module TB_toplevel;
     int fail_count = 0;
 
-    logic btnCpuResetn, clk50;
+    logic btnCpuResetn, clk;
     logic [15:0] gpio_in0, gpio_in1, gpio_out0, gpio_out1;
     logic serialRx;     // serial receive at idle
     wire serialTx;      // serial transmit
 
     dynnsoc dut(
-        .HCLK(clk50),
+        .HCLK(clk),
         .rst_n_in(btnCpuResetn),
         .serialRx(serialRx),
         .serialTx(serialTx),
@@ -25,9 +25,9 @@ module TB_toplevel;
     initial $readmemh("main.hex", dut.imem.bram.mem);  // load the program into ROM
 
     initial begin
-        clk50 = 1'b0;
+        clk = 1'b0;
         forever     // generate 50 MHz clock
-            #10 clk50 = ~clk50;  // invert clock every 10 ns
+            #10 clk = ~clk;  // invert clock every 10 ns
     end
 
     int i;
@@ -44,22 +44,22 @@ module TB_toplevel;
         end
 
         btnCpuResetn = 1'b0;    // assert reset
-        repeat(10) @(posedge clk50); // hold reset for a while
+        repeat(10) @(posedge clk); // hold reset for a while
         btnCpuResetn = 1'b1;    // release reset
-        repeat(100) @(posedge clk50); // wait for some time to allow the program to run
+        repeat(100) @(posedge clk); // wait for some time to allow the program to run
 
         for(i = 0; i < 15; i++) begin
-            repeat(200) @(posedge clk50);
+            repeat(200) @(posedge clk);
             $display("          Asserting slave IRQ %d",i);
             force dut.IRQ = 15'b1 << i;
-            repeat(4) @(posedge clk50);  // hold IRQ high for a few cycles to make sure the core sees it
+            repeat(4) @(posedge clk);  // hold IRQ high for a few cycles to make sure the core sees it
             release dut.IRQ;
             $display("          Released slave IRQ %d",i);
-            repeat(250) @(posedge clk50); // wait for the ISR to finish
+            repeat(250) @(posedge clk); // wait for the ISR to finish
             assert_equal(gpio_out0,i, $sformatf("gpio_out0 should indicate IRQ %d was handled", i));
         end
 
-        repeat(1000) @(posedge clk50); // wait for some time to allow the program to run
+        repeat(1000) @(posedge clk); // wait for some time to allow the program to run
 
         $display("\n========================================");
         if (fail_count == 0) begin

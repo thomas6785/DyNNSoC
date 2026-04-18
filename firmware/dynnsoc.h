@@ -115,15 +115,19 @@ static inline void irq_disable(uint32_t mask) {
 // GPIO helpers
 // ------------------------------------------------------------------
 
-static inline void gpio_write(uint16_t val) {
+static inline void gpio_write0(uint16_t val) {
     GPIO_OUT0 = val;
 }
 
-static inline uint16_t gpio_read_switches(void) {
+static inline void gpio_write1(uint16_t val) {
+    GPIO_OUT1 = val;
+}
+
+static inline uint16_t gpio_read0(void) {
     return (uint16_t)GPIO_IN0;
 }
 
-static inline uint16_t gpio_read_buttons(void) {
+static inline uint16_t gpio_read1(void) {
     return (uint16_t)GPIO_IN1;
 }
 

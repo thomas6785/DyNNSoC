@@ -43,11 +43,11 @@ int main(void) {
 
     // Check the data was transferred correctly
     for (int i = 0; i < 256; i++) {
-        gpio_write(0);
+        gpio_write0(0);
         if (test_dest[i] != test_data[i]) {
-            gpio_write(0x0BAD); // if we fail, write BAD to the GPIO
+            gpio_write0(0x0BAD); // if we fail, write BAD to the GPIO
         }
     }
 
-    gpio_write(0xBEEF); // BEEF means the test is over
+    gpio_write0(0xBEEF); // BEEF means the test is over
 }

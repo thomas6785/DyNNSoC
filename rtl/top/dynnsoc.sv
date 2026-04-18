@@ -211,7 +211,7 @@ module dynnsoc (
 
         // Connections for ROM loader
         .resetHW        (rst_p),            // hardware reset
-        .loadButton     (btnU),             // pushbutton to activate loader
+        .loadButton     (TODO),             // pushbutton to activate loader
         .serialRx       (serialRx),         // serial input
         .rom_load_status(rom_load_status),  // 12-bit word count for display on LEDs
         .rom_load_active(ROMload)           // loader active
