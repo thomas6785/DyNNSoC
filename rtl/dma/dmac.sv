@@ -23,15 +23,15 @@ module dmac #(
     //                                 ||                                                                   |
     //                                 \/                                                                   |
     //                      |--------------------|      |--------------------|                              |
-    // |-----HREADYOUT=0--- |                    | ===> |                    | -----HREADYOUT=0---|         |
+    // |-----HREADY=0------ |                    | ===> |                    | -----HREADY=0------|         |
     // |                    | SRC_DATA_DEST_ADDR |      | DEST_DATA_SRC_ADDR |                    |         |
     // |----------------->  |                    | <=== |                    | <------------------|         |
     //                      |--------------------|      |--------------------|                              |
     //                                ||                                                                    |
     //                                \/                                                                    |
     //                      |--------------------|                                                          |
-    // |-----HREADYOUT=0--- |                    |                                                          |
-    // |                    | FINAL_DEST_DATA    | ---------HREADYOUT=1-------------------------------------|
+    // |-----HREADY=0------ |                    |                                                          |
+    // |                    | FINAL_DEST_DATA    | ---------HREADY=1----------------------------------------|
     // |----------------->  |                    |
     //                      |--------------------|
 
@@ -44,7 +44,7 @@ module dmac #(
     } state_t;
 
     logic error_flag, error_next;
-    // TODO error detection logic is present but doesn't actually do anything. It should terminate the transaction and send an IRQ
+    // TODO should raise an IRQ on error
 
     logic [31:0] src_addr, src_addr_next, dest_addr, dest_addr_next;
     logic [31:0] data_buffer;
@@ -73,8 +73,12 @@ module dmac #(
                         next_state = IDLE_STATE;
                     end
                 end
-                INITIAL_SRC_ADDR: begin // AHB does not allow stalling in the address phase so we can move straight from INITIAL_SRC_ADDR to SRC_DATA_DEST_ADDR
-                    next_state = SRC_DATA_DEST_ADDR;
+                INITIAL_SRC_ADDR: begin
+                    if (!dma_bus.HREADY) begin
+                        next_state = INITIAL_SRC_ADDR;
+                    end else begin
+                        next_state = SRC_DATA_DEST_ADDR;
+                    end
                 end
                 SRC_DATA_DEST_ADDR: begin
                     if (!dma_bus.HREADY) begin
