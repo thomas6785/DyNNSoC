@@ -148,6 +148,7 @@ module dmac #(
         end else begin
             error_flag <= error_next | error_flag; // Update error flag based on next state logic
         end
+        // TODO add support for clearing error flag with reg write, not just reset
     end
 
     // Source address and destination address updates
