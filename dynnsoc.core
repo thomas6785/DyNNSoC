@@ -63,11 +63,18 @@ filesets:
         files:
             - rtl/stubs/mvutop_wrapper_STUB.sv
 
+    # Constraint file for synthesis with Vivado
+    constraints:
+        file_type: xdc
+        files:
+            - dynnsoc.xdc
+
 targets:
     synth:
         filesets:
             - rtl_base
             - rtl_full
+            - constraints
         toplevel: dynnsoc
 
         default_tool: vivado
@@ -81,6 +88,7 @@ targets:
         filesets:
             - rtl_base
             - rtl_full
+            - constraints
         toplevel: dynnsoc
 
         default_tool: vivado
