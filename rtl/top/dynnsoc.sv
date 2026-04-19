@@ -114,13 +114,13 @@ module dynnsoc (
     ahb_interconn interconn (
         .HCLK,
         .HRESETn,
-        .master_if   (ahb_arbitrated_if.interconn),
-        .slave_if_s0 (ahb_imem_if.interconn),
-        .slave_if_s1 (ahb_ram_if.interconn),
-        .slave_if_s2 (ahb_gpio_if.interconn),
-        .slave_if_s3 (ahb_uart_if.interconn),
-        .slave_if_s4 (ahb_mvu_if.interconn),
-        .slave_if_s5 (ahb_dmac_s_if.interconn)
+        .master_if   ( ahb_arbitrated_if.interconn ),
+        .slave_if_s0 ( ahb_imem_if.interconn       ),
+        .slave_if_s1 ( ahb_ram_if.interconn        ),
+        .slave_if_s2 ( ahb_gpio_if.interconn       ),
+        .slave_if_s3 ( ahb_uart_if.interconn       ),
+        .slave_if_s4 ( ahb_mvu_if.interconn        ),
+        .slave_if_s5 ( ahb_dmac_s_if.interconn     )
     );
 
     // ========================================
