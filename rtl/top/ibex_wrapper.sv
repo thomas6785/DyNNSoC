@@ -66,8 +66,8 @@ module ibex_wrapper (
 
     .test_en_i(1'b0),     // enable all clock gates for testing
 
-    .hart_id_i(32'b0),  //???
-    .boot_addr_i(32'b0), //???
+    .hart_id_i(32'b0),
+    .boot_addr_i(32'b0),
 
     // Instruction memory interface (connects to ROM)
     .instr_req_o(instr_if.req),
@@ -93,7 +93,7 @@ module ibex_wrapper (
     .irq_timer_i(systickclk),
     .irq_external_i(EXT_IRQ),
     .irq_fast_i(IRQ),
-    .irq_nm_i(NMI),       // non-maskeable interrupt
+    .irq_nm_i(NMI),       // non-maskable interrupt
 
     // Debug Interface
     .debug_req_i(1'b0),
