@@ -104,7 +104,7 @@ void configure_mvu(uint8_t mvu_id) {
 }
 
 void start_mvu(uint8_t mvu_id) {
-    MVU_CSR(mvu_id) -> command = 3*3*14*14*4*4;
+    MVU_CSR(mvu_id) -> command = (3*3*14*14*4*4) | (1 << 30); // set mul mode
 }
 
 int main(void) {
