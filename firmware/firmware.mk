@@ -8,29 +8,24 @@
 # The including Makefile must have a main.c (or set SRCS_C).
 # Build products (main.elf, main.hex, main.lst) go in the current directory.
 
-# ── Toolchain ────────────────────────────────────────────────────
 PREFIX  := riscv32-unknown-elf-
 CC      := $(PREFIX)gcc
+AS      := $(PREFIX)as
+LD      := $(PREFIX)ld
 OBJCOPY := $(PREFIX)objcopy
 OBJDUMP := $(PREFIX)objdump
 
-# ── Flags ────────────────────────────────────────────────────────
 CFLAGS  := -Wall -O0 -march=rv32im_zicsr -mabi=ilp32 \
            -mstrict-align -falign-functions=4 -ffreestanding -nostartfiles \
            -I$(FW_DIR)
 LDFLAGS := -T $(FW_DIR)/link.ld -nostartfiles -lgcc
 
-# ── Sources ──────────────────────────────────────────────────────
 # Shared startup code (always linked)
 FW_CRT0 := $(FW_DIR)/crt0.S
 
-# Test-local C sources (default: all .c in the including Makefile's directory)
-SRCS_C  ?= $(wildcard *.c)
-
-# ── Targets ──────────────────────────────────────────────────────
-# Pattern rules: request any <name>.hex, <name>.elf, or <name>.lst
-# and Make will figure out the dependency chain automatically.
-#   e.g.  make main.hex   or   make foo.hex
+# Test-local C sources (default: all .c in the including Makefile's directory, always include dynnsoc.c if present)
+SRCS_C  ?= $(filter-out dynnsoc.c, $(wildcard *.c))
+SRCS_C  += $(if $(wildcard dynnsoc.c),dynnsoc.c)
 
 %.elf: $(FW_CRT0) $(SRCS_C) $(FW_DIR)/link.ld
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(FW_CRT0) $(SRCS_C)
