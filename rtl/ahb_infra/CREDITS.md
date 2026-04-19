@@ -10,6 +10,7 @@ By Thomas O'Dea:
     ahb_intf.sv
     ahb_decoder.sv
     ahb_1to1_interconnect.sv
+    ahb_interconn.sv
 
 By Thomas O'Dea with AI assistance:
     ahb_arbiter.sv (using GitHub Copilot and Opus model)
