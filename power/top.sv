@@ -92,7 +92,6 @@ module TB_toplevel;
         btnCpuResetn = 1'b0;    // start with reset active
         #400;                 // wait for cpu and bus clock to be stable
         repeat(10) @(posedge clk); // hold reset for a while
-        btnCpuResetn = 1'b1;    // release reset
 
         info("ROM peek:"); // display 16 bytes of ROM to allow checking the correct firmware is loaded
         for(i = 0; i < 16; i++) begin
