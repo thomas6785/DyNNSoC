@@ -10,15 +10,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="1,140.957598 us"></ZoomStartTime>
-      <ZoomEndTime time="1,169.436481 us"></ZoomEndTime>
-      <Cursor1Time time="1,164.690000 us"></Cursor1Time>
+      <ZoomStartTime time="640,321.753 ns"></ZoomStartTime>
+      <ZoomEndTime time="641,363.650 ns"></ZoomEndTime>
+      <Cursor1Time time="640,710.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="242"></NameColumnWidth>
-      <ValueColumnWidth column_width="115"></ValueColumnWidth>
+      <ValueColumnWidth column_width="111"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="19" />
+   <WVObjectSize size="8" />
    <wvobject type="logic" fp_name="/TB_toplevel/dut/DMAC/HCLK">
       <obj_property name="ElementShortName">HCLK</obj_property>
       <obj_property name="ObjectShortName">HCLK</obj_property>
@@ -27,65 +27,62 @@
       <obj_property name="ElementShortName">HRESETn</obj_property>
       <obj_property name="ObjectShortName">HRESETn</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/TB_toplevel/dut/DMAC/irq_flag">
-      <obj_property name="ElementShortName">irq_flag</obj_property>
-      <obj_property name="ObjectShortName">irq_flag</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/TB_toplevel/dut/DMAC/config_in_src_addr">
-      <obj_property name="ElementShortName">config_in_src_addr[31:0]</obj_property>
-      <obj_property name="ObjectShortName">config_in_src_addr[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/TB_toplevel/dut/DMAC/config_in_dest_addr">
-      <obj_property name="ElementShortName">config_in_dest_addr[31:0]</obj_property>
-      <obj_property name="ObjectShortName">config_in_dest_addr[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/TB_toplevel/dut/DMAC/config_in_transfer_size">
-      <obj_property name="ElementShortName">config_in_transfer_size[15:0]</obj_property>
-      <obj_property name="ObjectShortName">config_in_transfer_size[15:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/TB_toplevel/dut/DMAC/start_signal">
-      <obj_property name="ElementShortName">start_signal</obj_property>
-      <obj_property name="ObjectShortName">start_signal</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/TB_toplevel/dut/DMAC/irq_pulse">
-      <obj_property name="ElementShortName">irq_pulse</obj_property>
-      <obj_property name="ObjectShortName">irq_pulse</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/TB_toplevel/dut/DMAC/reg_access">
-      <obj_property name="ElementShortName">reg_access[3:0]</obj_property>
-      <obj_property name="ObjectShortName">reg_access[3:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/TB_toplevel/dut/DMAC/reg_write">
-      <obj_property name="ElementShortName">reg_write</obj_property>
-      <obj_property name="ObjectShortName">reg_write</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/TB_toplevel/dut/DMAC/reg_wdata">
-      <obj_property name="ElementShortName">reg_wdata[31:0]</obj_property>
-      <obj_property name="ObjectShortName">reg_wdata[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/TB_toplevel/dut/DMAC/reg_rdata">
-      <obj_property name="ElementShortName">reg_rdata[3:0][31:0]</obj_property>
-      <obj_property name="ObjectShortName">reg_rdata[3:0][31:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/TB_toplevel/dut/DMAC/reg_error">
-      <obj_property name="ElementShortName">reg_error</obj_property>
-      <obj_property name="ObjectShortName">reg_error</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/TB_toplevel/dut/DMAC/reg_ready">
-      <obj_property name="ElementShortName">reg_ready</obj_property>
-      <obj_property name="ObjectShortName">reg_ready</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/TB_toplevel/dut/DMAC/BAD_ADDR_SPACE_VALUE">
-      <obj_property name="ElementShortName">BAD_ADDR_SPACE_VALUE[31:0]</obj_property>
-      <obj_property name="ObjectShortName">BAD_ADDR_SPACE_VALUE[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/TB_toplevel/dut/DMAC/BAD_ADDR_SPACE_MASK">
-      <obj_property name="ElementShortName">BAD_ADDR_SPACE_MASK[31:0]</obj_property>
-      <obj_property name="ObjectShortName">BAD_ADDR_SPACE_MASK[31:0]</obj_property>
+   <wvobject type="group" fp_name="group49">
+      <obj_property name="label">DMA Signals</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/DMAC/irq_flag">
+         <obj_property name="ElementShortName">irq_flag</obj_property>
+         <obj_property name="ObjectShortName">irq_flag</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/DMAC/config_in_src_addr">
+         <obj_property name="ElementShortName">config_in_src_addr[31:0]</obj_property>
+         <obj_property name="ObjectShortName">config_in_src_addr[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/DMAC/config_in_dest_addr">
+         <obj_property name="ElementShortName">config_in_dest_addr[31:0]</obj_property>
+         <obj_property name="ObjectShortName">config_in_dest_addr[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/DMAC/config_in_transfer_size">
+         <obj_property name="ElementShortName">config_in_transfer_size[15:0]</obj_property>
+         <obj_property name="ObjectShortName">config_in_transfer_size[15:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/DMAC/start_signal">
+         <obj_property name="ElementShortName">start_signal</obj_property>
+         <obj_property name="ObjectShortName">start_signal</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/DMAC/irq_pulse">
+         <obj_property name="ElementShortName">irq_pulse</obj_property>
+         <obj_property name="ObjectShortName">irq_pulse</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/DMAC/reg_access">
+         <obj_property name="ElementShortName">reg_access[3:0]</obj_property>
+         <obj_property name="ObjectShortName">reg_access[3:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/DMAC/reg_write">
+         <obj_property name="ElementShortName">reg_write</obj_property>
+         <obj_property name="ObjectShortName">reg_write</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/DMAC/reg_wdata">
+         <obj_property name="ElementShortName">reg_wdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">reg_wdata[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/DMAC/reg_rdata">
+         <obj_property name="ElementShortName">reg_rdata[3:0][31:0]</obj_property>
+         <obj_property name="ObjectShortName">reg_rdata[3:0][31:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/DMAC/reg_error">
+         <obj_property name="ElementShortName">reg_error</obj_property>
+         <obj_property name="ObjectShortName">reg_error</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/DMAC/reg_ready">
+         <obj_property name="ElementShortName">reg_ready</obj_property>
+         <obj_property name="ObjectShortName">reg_ready</obj_property>
+      </wvobject>
    </wvobject>
    <wvobject type="group" fp_name="group26">
       <obj_property name="label">DMA Maser Interface</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_dmac_m_if/HWDATA">
          <obj_property name="ElementShortName">HWDATA[31:0]</obj_property>
          <obj_property name="ObjectShortName">HWDATA[31:0]</obj_property>
@@ -123,9 +120,59 @@
          <obj_property name="ObjectShortName">HRESP</obj_property>
       </wvobject>
    </wvobject>
+   <wvobject type="group" fp_name="group61">
+      <obj_property name="label">CPU AHB IF</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_cpu_if/HWDATA">
+         <obj_property name="ElementShortName">HWDATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">HWDATA[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_cpu_if/HWRITE">
+         <obj_property name="ElementShortName">HWRITE</obj_property>
+         <obj_property name="ObjectShortName">HWRITE</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_cpu_if/HSIZE">
+         <obj_property name="ElementShortName">HSIZE[2:0]</obj_property>
+         <obj_property name="ObjectShortName">HSIZE[2:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_cpu_if/HPROT">
+         <obj_property name="ElementShortName">HPROT[3:0]</obj_property>
+         <obj_property name="ObjectShortName">HPROT[3:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_cpu_if/HTRANS">
+         <obj_property name="ElementShortName">HTRANS[1:0]</obj_property>
+         <obj_property name="ObjectShortName">HTRANS[1:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_cpu_if/HADDR">
+         <obj_property name="ElementShortName">HADDR[31:0]</obj_property>
+         <obj_property name="ObjectShortName">HADDR[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_cpu_if/HRDATA">
+         <obj_property name="ElementShortName">HRDATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">HRDATA[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_cpu_if/HREADY">
+         <obj_property name="ElementShortName">HREADY</obj_property>
+         <obj_property name="ObjectShortName">HREADY</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_cpu_if/HRESP">
+         <obj_property name="ElementShortName">HRESP</obj_property>
+         <obj_property name="ObjectShortName">HRESP</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_cpu_if/ADDR_WIDTH">
+         <obj_property name="ElementShortName">ADDR_WIDTH[31:0]</obj_property>
+         <obj_property name="ObjectShortName">ADDR_WIDTH[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_cpu_if/DATA_WIDTH">
+         <obj_property name="ElementShortName">DATA_WIDTH[31:0]</obj_property>
+         <obj_property name="ObjectShortName">DATA_WIDTH[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
    <wvobject type="group" fp_name="group36">
       <obj_property name="label">Arbitrated Master</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_arbitrated_if/HWDATA">
          <obj_property name="ElementShortName">HWDATA[31:0]</obj_property>
          <obj_property name="ObjectShortName">HWDATA[31:0]</obj_property>
@@ -209,6 +256,63 @@
       <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_ram_if/HSEL">
          <obj_property name="ElementShortName">HSEL</obj_property>
          <obj_property name="ObjectShortName">HSEL</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="group" fp_name="group75">
+      <obj_property name="label">DMA SLAVE IF</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_dmac_s_if/HRDATA">
+         <obj_property name="ElementShortName">HRDATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">HRDATA[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_dmac_s_if/HREADYOUT">
+         <obj_property name="ElementShortName">HREADYOUT</obj_property>
+         <obj_property name="ObjectShortName">HREADYOUT</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_dmac_s_if/HRESP">
+         <obj_property name="ElementShortName">HRESP</obj_property>
+         <obj_property name="ObjectShortName">HRESP</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_dmac_s_if/HWDATA">
+         <obj_property name="ElementShortName">HWDATA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">HWDATA[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_dmac_s_if/HWRITE">
+         <obj_property name="ElementShortName">HWRITE</obj_property>
+         <obj_property name="ObjectShortName">HWRITE</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_dmac_s_if/HSIZE">
+         <obj_property name="ElementShortName">HSIZE[2:0]</obj_property>
+         <obj_property name="ObjectShortName">HSIZE[2:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_dmac_s_if/HPROT">
+         <obj_property name="ElementShortName">HPROT[3:0]</obj_property>
+         <obj_property name="ObjectShortName">HPROT[3:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_dmac_s_if/HTRANS">
+         <obj_property name="ElementShortName">HTRANS[1:0]</obj_property>
+         <obj_property name="ObjectShortName">HTRANS[1:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_dmac_s_if/HADDR">
+         <obj_property name="ElementShortName">HADDR[31:0]</obj_property>
+         <obj_property name="ObjectShortName">HADDR[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_dmac_s_if/HREADY">
+         <obj_property name="ElementShortName">HREADY</obj_property>
+         <obj_property name="ObjectShortName">HREADY</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_dmac_s_if/HSEL">
+         <obj_property name="ElementShortName">HSEL</obj_property>
+         <obj_property name="ObjectShortName">HSEL</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_dmac_s_if/ADDR_WIDTH">
+         <obj_property name="ElementShortName">ADDR_WIDTH[31:0]</obj_property>
+         <obj_property name="ObjectShortName">ADDR_WIDTH[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_dmac_s_if/DATA_WIDTH">
+         <obj_property name="ElementShortName">DATA_WIDTH[31:0]</obj_property>
+         <obj_property name="ObjectShortName">DATA_WIDTH[31:0]</obj_property>
       </wvobject>
    </wvobject>
 </wave_config>
