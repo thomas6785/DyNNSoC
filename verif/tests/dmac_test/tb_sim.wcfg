@@ -10,9 +10,9 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="640,321.753 ns"></ZoomStartTime>
-      <ZoomEndTime time="641,363.650 ns"></ZoomEndTime>
-      <Cursor1Time time="640,710.000 ns"></Cursor1Time>
+      <ZoomStartTime time="640,633.978 ns"></ZoomStartTime>
+      <ZoomEndTime time="640,917.613 ns"></ZoomEndTime>
+      <Cursor1Time time="640,720.220 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="242"></NameColumnWidth>
@@ -87,22 +87,6 @@
          <obj_property name="ElementShortName">HWDATA[31:0]</obj_property>
          <obj_property name="ObjectShortName">HWDATA[31:0]</obj_property>
       </wvobject>
-      <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_dmac_m_if/HWRITE">
-         <obj_property name="ElementShortName">HWRITE</obj_property>
-         <obj_property name="ObjectShortName">HWRITE</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_dmac_m_if/HSIZE">
-         <obj_property name="ElementShortName">HSIZE[2:0]</obj_property>
-         <obj_property name="ObjectShortName">HSIZE[2:0]</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_dmac_m_if/HPROT">
-         <obj_property name="ElementShortName">HPROT[3:0]</obj_property>
-         <obj_property name="ObjectShortName">HPROT[3:0]</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_dmac_m_if/HTRANS">
-         <obj_property name="ElementShortName">HTRANS[1:0]</obj_property>
-         <obj_property name="ObjectShortName">HTRANS[1:0]</obj_property>
-      </wvobject>
       <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_dmac_m_if/HADDR">
          <obj_property name="ElementShortName">HADDR[31:0]</obj_property>
          <obj_property name="ObjectShortName">HADDR[31:0]</obj_property>
@@ -115,10 +99,6 @@
          <obj_property name="ElementShortName">HREADY</obj_property>
          <obj_property name="ObjectShortName">HREADY</obj_property>
       </wvobject>
-      <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_dmac_m_if/HRESP">
-         <obj_property name="ElementShortName">HRESP</obj_property>
-         <obj_property name="ObjectShortName">HRESP</obj_property>
-      </wvobject>
    </wvobject>
    <wvobject type="group" fp_name="group61">
       <obj_property name="label">CPU AHB IF</obj_property>
@@ -127,18 +107,6 @@
       <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_cpu_if/HWDATA">
          <obj_property name="ElementShortName">HWDATA[31:0]</obj_property>
          <obj_property name="ObjectShortName">HWDATA[31:0]</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_cpu_if/HWRITE">
-         <obj_property name="ElementShortName">HWRITE</obj_property>
-         <obj_property name="ObjectShortName">HWRITE</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_cpu_if/HSIZE">
-         <obj_property name="ElementShortName">HSIZE[2:0]</obj_property>
-         <obj_property name="ObjectShortName">HSIZE[2:0]</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_cpu_if/HPROT">
-         <obj_property name="ElementShortName">HPROT[3:0]</obj_property>
-         <obj_property name="ObjectShortName">HPROT[3:0]</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_cpu_if/HTRANS">
          <obj_property name="ElementShortName">HTRANS[1:0]</obj_property>
@@ -156,18 +124,6 @@
          <obj_property name="ElementShortName">HREADY</obj_property>
          <obj_property name="ObjectShortName">HREADY</obj_property>
       </wvobject>
-      <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_cpu_if/HRESP">
-         <obj_property name="ElementShortName">HRESP</obj_property>
-         <obj_property name="ObjectShortName">HRESP</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_cpu_if/ADDR_WIDTH">
-         <obj_property name="ElementShortName">ADDR_WIDTH[31:0]</obj_property>
-         <obj_property name="ObjectShortName">ADDR_WIDTH[31:0]</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_cpu_if/DATA_WIDTH">
-         <obj_property name="ElementShortName">DATA_WIDTH[31:0]</obj_property>
-         <obj_property name="ObjectShortName">DATA_WIDTH[31:0]</obj_property>
-      </wvobject>
    </wvobject>
    <wvobject type="group" fp_name="group36">
       <obj_property name="label">Arbitrated Master</obj_property>
@@ -176,18 +132,6 @@
       <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_arbitrated_if/HWDATA">
          <obj_property name="ElementShortName">HWDATA[31:0]</obj_property>
          <obj_property name="ObjectShortName">HWDATA[31:0]</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_arbitrated_if/HWRITE">
-         <obj_property name="ElementShortName">HWRITE</obj_property>
-         <obj_property name="ObjectShortName">HWRITE</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_arbitrated_if/HSIZE">
-         <obj_property name="ElementShortName">HSIZE[2:0]</obj_property>
-         <obj_property name="ObjectShortName">HSIZE[2:0]</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_arbitrated_if/HPROT">
-         <obj_property name="ElementShortName">HPROT[3:0]</obj_property>
-         <obj_property name="ObjectShortName">HPROT[3:0]</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/TB_toplevel/dut/ahb_arbitrated_if/HTRANS">
          <obj_property name="ElementShortName">HTRANS[1:0]</obj_property>
@@ -204,10 +148,6 @@
       <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_arbitrated_if/HREADY">
          <obj_property name="ElementShortName">HREADY</obj_property>
          <obj_property name="ObjectShortName">HREADY</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/TB_toplevel/dut/ahb_arbitrated_if/HRESP">
-         <obj_property name="ElementShortName">HRESP</obj_property>
-         <obj_property name="ObjectShortName">HRESP</obj_property>
       </wvobject>
    </wvobject>
    <wvobject type="group" fp_name="group48">

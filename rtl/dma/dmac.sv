@@ -45,6 +45,7 @@ module dmac #(
 
     logic error_flag, error_next;
     // TODO should raise an IRQ on error
+    // TODO it would be best to extend the FSM to have an 'error' and 'done' state, which includes the IRQ and error flags in it implicitly. this saves flops but more importantly is conceptually clearer and allows better analysis of the FSM for verification and documentation
 
     logic [31:0] src_addr, src_addr_next, dest_addr, dest_addr_next;
     logic [31:0] data_buffer;

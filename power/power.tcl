@@ -14,16 +14,27 @@ run -all
 # set up logging of switching activity in the SAIF file
 open_saif /tmp/myrun.saif
 
-# Log top-level signals in the DUT
+# Log top-level signals in the DUT including the AHB bus
 current_scope /TB_toplevel/dut
+log_saif [get_objects]
+current_scope /TB_toplevel/dut/ahb_cpu_if
+log_saif [get_objects]
+current_scope /TB_toplevel/dut/ahb_dmac_m_if
+log_saif [get_objects]
+current_scope /TB_toplevel/dut/ahb_arbitrated_if
 log_saif [get_objects]
 
 # Log top-level signals in the CPU
-current_scope cpu
+current_scope /TB_toplevel/dut/cpu
 log_saif [get_objects]
 
+# Log top-level signals in the DMAC
+current_scope /TB_toplevel/dut/DMAC
+log_saif [get_objects]
+current_scope
+
 # Log top-level signals in the MVU array
-current_scope ../MVU/mvu
+current_scope /TB_toplevel/dut/MVU/mvu
 log_saif [get_objects]
 
 # Log the signals in each mvu.sv
@@ -47,5 +58,5 @@ close_sim
 # Open the implemented design and read the SAIF file to report power
 open_run impl_1
 read_saif /tmp/myrun.saif
-report_power
+report_power -hierarchical_depth 7 -l 30
 close_design

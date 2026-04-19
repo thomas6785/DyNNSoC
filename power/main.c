@@ -1,5 +1,17 @@
 #include "dynnsoc.h"
 
+#define MVUS_ACTIVE 4
+// ^ may be 0, 1, 4
+//#define DMAC_ACTIVE
+#define CORE_ACTIVE
+
+
+// Test phases (written to GPIO_OUT1 for debugging purposes):
+#define PHASE_INIT 0x0
+#define PHASE_CONFIGURE 0x1
+#define PHASE_KICKOFF 0x2
+#define PHASE_DONE 0x3
+
 void mark_tb_phase(uint8_t code) {
     gpio_write1(code);   // write the phase code for debug purposes
 }
@@ -20,26 +32,30 @@ uint32_t prng(uint32_t feed) {
     return prng_state;
 }
 
-static volatile uint32_t waiting_for_interrupt = 0;
 void irq_handler_11(void) __attribute__((interrupt("machine")));
 void irq_handler_11(void) {
-    waiting_for_interrupt = 0;
+    halt_tb(PHASE_DONE); // end the test when the first MVU finishes
     MVU_CSR(0) -> status = 1; // clear interrupt (w1c)
 }
 void irq_handler_12(void) __attribute__((interrupt("machine")));
 void irq_handler_12(void) {
-    waiting_for_interrupt = 0;
     MVU_CSR(1) -> status = 1; // clear interrupt (w1c)
 }
 void irq_handler_13(void) __attribute__((interrupt("machine")));
 void irq_handler_13(void) {
-    waiting_for_interrupt = 0;
     MVU_CSR(2) -> status = 1; // clear interrupt (w1c)
 }
 void irq_handler_14(void) __attribute__((interrupt("machine")));
 void irq_handler_14(void) {
-    waiting_for_interrupt = 0;
     MVU_CSR(3) -> status = 1; // clear interrupt (w1c)
+}
+void irq_handler_02(void) __attribute__((interrupt("machine")));
+void irq_handler_02(void) {
+    DMAC_CONFIG->control = 1; // write last bit to clear IRQ
+    DMAC_CONFIG->control = (1<<31); // restart DMAC to keep it busy for the duration of the tests
+    #if MVUS_ACTIVE == 0
+    halt_tb(PHASE_DONE); // if we're not testing MVUs, end the test when the DMAC finishes
+    #endif
 }
 
 // GPIO_OUT0 is monitored by the testbench:
@@ -51,12 +67,6 @@ void irq_handler_14(void) {
 
 #define NMVU 4
 // number of MVU's, parametrisable
-
-// Test phases (written to GPIO_OUT1 for debugging purposes):
-#define PHASE_INIT 0x0
-#define PHASE_CONFIGURE_MVU 0x1
-#define PHASE_START_MVU 0x2
-#define PHASE_DONE 0x3
 
 void configure_mvu(uint8_t mvu_id) {
     // Configures an MVU for a convolution
@@ -107,6 +117,9 @@ void start_mvu(uint8_t mvu_id) {
     MVU_CSR(mvu_id) -> command = (3*3*14*14*4*4) | (1 << 30); // set mul mode
 }
 
+// Dummy data for DMAC
+uint32_t test_data_a[1024];
+
 int main(void) {
     int i;
 
@@ -117,19 +130,53 @@ int main(void) {
 
     prng(gpio_read0()); // seed the PRNG with the switches (we can randomise them in the TB)
 
-    mark_tb_phase(PHASE_CONFIGURE_MVU);
+    for(i=0; i<1024; i++) { // load dummy data for the DMAC to transfer
+        test_data_a[i] = prng(i);
+    }
+
+    mark_tb_phase(PHASE_CONFIGURE);
     for (i=0; i<NMVU; i++) {
         configure_mvu(i);
     }
 
-    halt_tb(PHASE_START_MVU);
+    #ifdef DMAC_ACTIVE
+    // Configure the DMAC
+    DMAC_CONFIG->src_addr = (uint32_t)test_data_a; // source address
+    DMAC_CONFIG->dst_addr = (uint32_t)test_data_a; // write back to the same array just for testing purposes
+    DMAC_CONFIG->length = 1024; // length of the transaction
+    DMAC_CONFIG->control = (1<<31); // bit 31 = start transfer
+    #endif
+
+    #if MVUS_ACTIVE > 1
     for (i=0; i<NMVU; i++) {
         start_mvu(i);
     }
+    #elif MVUS_ACTIVE == 1
+    start_mvu(0);
+    #endif
 
-    // wait for the MVU IRQ
-    waiting_for_interrupt = 1;
-    while(waiting_for_interrupt);
+    halt_tb(PHASE_KICKOFF); // halt the TB just after kicking off the test load,
+    // so that we can begin SAIF logging
 
-    halt_tb(PHASE_DONE);
+    #ifndef CORE_ACTIVE
+    // Go to sleep
+    return 0;
+    #endif
+
+    // Simulate core activity with some arithmetic
+    while(1) {
+        // Simulate activity
+        volatile uint32_t x;
+        volatile uint32_t y;
+        x = prng(x); // simple arithmetic to use the PRNG
+        y = x*y + 0x123; // multiplication is more costly
+        x = prng(x); // simple arithmetic to use the PRNG
+        y = x*y + 0x123; // multiplication is more costly
+        x = prng(x); // simple arithmetic to use the PRNG
+        y = x*y + 0x123; // multiplication is more costly
+        // core has to flush the pipeline every time the loop restarts,
+        // so we copy the code a few times to keep the core busier and decrease the frequency of
+        // pipeline flushes. This is wasteful in practical terms but useful for simulation load for power
+        // measurement purposes.
+    };
 }
