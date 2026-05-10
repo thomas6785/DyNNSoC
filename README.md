@@ -8,6 +8,10 @@ Those designs targetted mixed-precision neural networks without necessarily cons
 
 Two key papers on dynamic quantisation ALGORITHMS (which do not consider hardware implementation) are [3] and [4]
 
+## Contact
+If you've inherited this project for an academic project, consider contacting the original author (me) for a quick call to introduce the project, handover it over, and clarify any questions you may have.
+    thomaseodea@gmail.com
+
 ## Roadmap
 
 General:
